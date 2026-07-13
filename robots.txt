@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://firstlogis.co.kr/sitemap.xml

@@ -1,0 +1,15 @@
+{
+  "name": "퍼스트물류",
+  "short_name": "퍼스트물류",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#071a33",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
