@@ -25,3 +25,29 @@
   [headers.values]
     Content-Type = "text/plain; charset=UTF-8"
     Cache-Control = "public, max-age=3600"
+
+# 퍼스트물류.kr -> firstlogis.co.kr
+[[redirects]]
+  from = "http://xn--9v2bp8ar4lo2r71a.kr/*"
+  to = "https://firstlogis.co.kr/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://xn--9v2bp8ar4lo2r71a.kr/*"
+  to = "https://firstlogis.co.kr/:splat"
+  status = 301
+  force = true
+
+# 바이크탁송.shop -> firstlogis.co.kr
+[[redirects]]
+  from = "http://xn--9g3bo5h1rfowkfma.shop/*"
+  to = "https://firstlogis.co.kr/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://xn--9g3bo5h1rfowkfma.shop/*"
+  to = "https://firstlogis.co.kr/:splat"
+  status = 301
+  force = true
