@@ -4,7 +4,7 @@ window.FIRST_LOGIS_CONFIG = {
   phoneHref: "tel:16618210",
   phoneMnemonic: "8210 = 빨리일번",
   email: "",
-  kakaoUrl: "",
+  kakaoUrl: "https://pf.kakao.com/_xdTxhfX",
   blogUrl: "",
   placeUrl: "",
   address: "인천 제물포구 방축로37번길 30 인천산업용품유통단지 5동 331호"

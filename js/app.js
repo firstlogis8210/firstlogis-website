@@ -5,6 +5,7 @@
   $all("[data-company-phone]").forEach(el => el.textContent = cfg.phoneDisplay || "1661-8210");
   $all("[data-phone-mnemonic]").forEach(el => el.textContent = cfg.phoneMnemonic || "8210 = 빨리일번");
   $all("[data-company-phone-link]").forEach(el => el.href = cfg.phoneHref || "tel:16618210");
+  $all("[data-kakao-link]").forEach(el => el.href = cfg.kakaoUrl);
 
   const menuToggle = document.getElementById("menuToggle");
   const mainNav = document.getElementById("mainNav");
