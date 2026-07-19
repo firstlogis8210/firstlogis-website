@@ -18,6 +18,17 @@ Version : 1.0
 - [x] GA4·Naver Analytics 유지 및 `bike_page_view` 이벤트 연결
 - [x] HTML 구조·참조 경로·CTA 및 갤러리 스크립트 정적 검증
 
+## 2026-07-19 승인 디자인 복원
+
+- [x] 승인 원본 `project/reference/bike-final.html.html` 구조·스타일·문구 확인
+- [x] 원본 기준으로 `/bike/index.html` 디자인 및 반응형 레이아웃 복원
+- [x] 실제 운송사진 20장과 객관적 설명으로 사례 슬라이더 구성
+- [x] 원본 전화 전용 CTA 구성 및 `phone_click` 추적 유지
+- [x] GA4·Naver Analytics 및 `bike_page_view` 유지
+- [x] 이전·다음·자동 재생·모바일 터치 이동 구성
+- [x] 원본 파일 해시, 이미지 경로, SEO, 분석 코드 및 메인 홈페이지 무변경 정적 검증
+- [ ] 연결 가능한 브라우저 환경에서 PC·모바일 화면 및 콘솔 최종 확인
+
 ---
 
 # 🎯 이번 주 목표

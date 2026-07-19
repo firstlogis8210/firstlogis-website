@@ -26,6 +26,28 @@ Version : 1.0
 - [KEEP] 기존 GA4 및 Naver Analytics 추적 코드 유지
 - [ADD] `/bike/` 진입 시 `bike_page_view` 이벤트 전송
 
+## WEBSITE
+
+- [FIX] 대표 승인 원본을 기준으로 `/bike/` 디자인, 문구, 섹션 순서 및 반응형 레이아웃 복원
+- [UPDATE] 원본의 전화 전용 CTA 구성을 유지하고 카카오톡·견적문의 버튼 제거
+- [UPDATE] 실제 운송사례를 프로젝트 사진 20장과 객관적인 설명으로 구성
+- [ADD] 사례 슬라이더에 기존 자동 재생·이전·다음·점 표시와 모바일 터치 이동 적용
+- [REMOVE] 원본의 내부 CSS·JavaScript를 사용하도록 전환해 별도 `bike.css`, `bike.js` 제거
+
+## SEO
+
+- [KEEP] `/bike/` 전용 title, description, canonical, OG 및 sitemap 등록 유지
+
+## ADS
+
+- [KEEP] GA4, Naver Analytics, `bike_page_view`, `phone_click` 추적 유지
+
+## TEST
+
+- [DONE] 승인 원본 SHA-256 무변경, 실제 사례 20장 lazy loading, 참조 파일 누락 0건 확인
+- [DONE] 루트 `index.html`, 공통 CSS·JavaScript 및 메인 홈페이지 SEO 무변경 확인
+- [PENDING] 현재 실행 환경에 연결 가능한 브라우저가 없어 PC·모바일 시각 및 콘솔 검증은 배포 전 별도 확인 필요
+
 ---
 
 # CHANGELOG 작성 원칙
