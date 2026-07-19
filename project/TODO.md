@@ -8,6 +8,16 @@
 > Last Update : 2026-07-19
 Version : 1.0
 
+## 2026-07-19 바이크 전용 랜딩페이지
+
+- [x] `/bike/index.html` 신규 제작
+- [x] 바이크 서비스 소개 및 실제 운송 사진 20장 갤러리 구성
+- [x] 모바일 1장·PC 다중 카드 반응형 구성
+- [x] 전화·카카오·견적문의 CTA 및 견적 폼 연결
+- [x] `/bike/` 전용 SEO, OG, canonical 구성
+- [x] GA4·Naver Analytics 유지 및 `bike_page_view` 이벤트 연결
+- [x] HTML 구조·참조 경로·CTA 및 갤러리 스크립트 정적 검증
+
 ---
 
 # 🎯 이번 주 목표

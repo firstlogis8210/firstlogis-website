@@ -7,6 +7,25 @@
 Last Update : 2026-07-14
 Version : 1.0
 
+# 2026-07-19
+
+## WEBSITE
+
+- [ADD] `/bike/index.html` 바이크탁송 전용 랜딩페이지 제작
+- [ADD] 실제 바이크 운송 사진 20장을 사용한 반응형 슬라이드 갤러리 구성
+- [ADD] 일반·고가·신차·중고거래·장거리 바이크 운송 서비스 안내
+- [ADD] 전화·카카오톡·사진 첨부 견적문의 CTA 연결
+
+## SEO
+
+- [ADD] `/bike/` 전용 title, description, heading, OG, canonical 및 구조화 데이터 구성
+- [ADD] sitemap.xml에 `/bike/` URL 등록
+
+## ADS
+
+- [KEEP] 기존 GA4 및 Naver Analytics 추적 코드 유지
+- [ADD] `/bike/` 진입 시 `bike_page_view` 이벤트 전송
+
 ---
 
 # CHANGELOG 작성 원칙
