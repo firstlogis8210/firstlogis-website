@@ -20,6 +20,13 @@
   <meta name="twitter:image" content="https://firstlogis.co.kr/assets/hero-truck.webp">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EL5B8HR0W"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6EL5B8HR0W');
+  </script>
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -57,18 +64,18 @@
         <a href="#process">운송과정</a>
         <a href="#cases">운송분야</a>
         <a href="#faq">FAQ</a>
-        <a href="#quote">견적문의</a>
+        <a href="#quote" data-track-event="quote_start" data-track-location="header-nav">견적문의</a>
         <button class="nav-disabled" data-pending="블로그">블로그</button>
         <button class="nav-disabled" data-pending="네이버 플레이스">네이버 플레이스</button>
       </nav>
 
       <div class="header-phone">
         <span>성실 운송 상담</span>
-        <a data-company-phone href="tel:16618210">1661-8210</a>
+        <a data-company-phone href="tel:16618210" data-track-event="phone_click" data-track-location="header">1661-8210</a>
         <small data-phone-mnemonic>8210 = 빨리일번</small>
       </div>
 
-      <button class="btn btn-primary open-quote" type="button">견적 문의</button>
+      <button class="btn btn-primary open-quote" type="button" data-track-event="quote_start" data-track-location="header">견적 문의</button>
     </div>
   </header>
 
@@ -83,12 +90,12 @@
         <p class="hero-sub">퀵서비스부터 25톤 화물까지<br>기업운송 · 정기운송 · 긴급운송</p>
 
         <div class="hero-actions">
-          <a class="phone-card" data-company-phone-link href="tel:16618210">
+          <a class="phone-card" data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="hero">
             <span>☎ 전화 문의</span>
             <strong data-company-phone>1661-8210</strong>
             <small data-phone-mnemonic>8210 = 빨리일번</small>
           </a>
-          <button class="quote-card open-quote" type="button">
+          <button class="quote-card open-quote" type="button" data-track-event="quote_start" data-track-location="hero">
             <span>견적 문의</span>
             <strong>사진 첨부 가능</strong>
           </button>
@@ -97,13 +104,13 @@
     </section>
 
     <aside class="floating-actions" aria-label="빠른 문의">
-      <a data-company-phone-link href="tel:16618210" class="float-phone">
+      <a data-company-phone-link href="tel:16618210" class="float-phone" data-track-event="phone_click" data-track-location="desktop-fixed">
         <b>☎</b><span>전화 문의</span><strong data-company-phone>1661-8210</strong><small data-phone-mnemonic>8210 = 빨리일번</small>
       </a>
-      <a class="float-kakao" data-kakao-link target="_blank" rel="noopener noreferrer">
+      <a class="float-kakao" data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="desktop-fixed">
         <b>💬</b><span>카카오톡</span><small>상담하기</small>
       </a>
-      <button type="button" class="float-quote open-quote">
+      <button type="button" class="float-quote open-quote" data-track-event="quote_start" data-track-location="desktop-fixed">
         <b>▣</b><span>견적 문의</span><small>사진 첨부</small>
       </button>
       <a href="#top" class="float-top"><b>↑</b><span>TOP</span></a>
@@ -215,10 +222,10 @@
           <span>빠른 견적 문의</span>
           <h2>출·도착지, 운송품목, 사진 등을<br>접수해주시면 빠르게 상담해드리겠습니다.</h2>
           <p>운송일정과 현장 조건을 함께 남겨주시면 더욱 정확하게 안내해드릴 수 있습니다.</p>
-          <a class="btn btn-primary" data-company-phone-link href="tel:16618210">1661-8210 전화하기</a>
+          <a class="btn btn-primary" data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="quote-section">1661-8210 전화하기</a>
         </div>
 
-        <form class="quote-form" name="transport-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/thanks.html">
+        <form class="quote-form" name="transport-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/thanks.html" data-track-form="transport-quote">
           <input type="hidden" name="form-name" value="transport-quote">
           <input type="hidden" name="quote_id" value="">
           <p class="hidden-field"><label>입력하지 마세요 <input name="bot-field"></label></p>
@@ -274,7 +281,7 @@
           <div><dt>대표</dt><dd>변성민</dd></div>
           <div><dt>개인정보책임자</dt><dd>변성민</dd></div>
           <div><dt>주소</dt><dd>인천 제물포구 방축로37번길 30<br>인천산업용품유통단지 5동 331호</dd></div>
-          <div><dt>전화번호</dt><dd><a data-company-phone-link href="tel:16618210">1661-8210</a></dd></div>
+          <div><dt>전화번호</dt><dd><a data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="footer">1661-8210</a></dd></div>
           <div><dt>사업자등록번호</dt><dd>108-30-29235</dd></div>
           <div><dt>운송허가증</dt><dd>제 남동-2-11828호</dd></div>
         </dl>
@@ -287,7 +294,7 @@
         <a href="docs/legal.html#transport">운송약관</a>
         <button data-pending="블로그">블로그 준비 중</button>
         <button data-pending="네이버 플레이스">네이버 플레이스 준비 중</button>
-        <a class="kakao-link" data-kakao-link target="_blank" rel="noopener noreferrer">카카오톡 상담</a>
+        <a class="kakao-link" data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="footer">카카오톡 상담</a>
       </div>
     </div>
 
@@ -300,9 +307,9 @@
   </footer>
 
   <div class="mobile-actions">
-    <a data-company-phone-link href="tel:16618210"><b>☎ 전화</b><span data-company-phone>1661-8210</span></a>
-    <a data-kakao-link target="_blank" rel="noopener noreferrer"><b>💬 카카오톡</b><span>상담하기</span></a>
-    <button class="open-quote"><b>▣ 견적</b><span>사진 첨부</span></button>
+    <a data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="mobile-fixed"><b>☎ 전화</b><span data-company-phone>1661-8210</span></a>
+    <a data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="mobile-fixed"><b>💬 카카오톡</b><span>상담하기</span></a>
+    <button class="open-quote" data-track-event="quote_start" data-track-location="mobile-fixed"><b>▣ 견적</b><span>사진 첨부</span></button>
   </div>
 
   <div class="modal" id="quoteModal" aria-hidden="true">
@@ -312,7 +319,7 @@
       <h2 id="quoteModalTitle">빠른 견적 문의</h2>
       <p>운송 조건과 사진을 보내주시면 확인 후 연락드립니다.</p>
 
-      <form name="transport-quote-popup" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/thanks.html">
+      <form name="transport-quote-popup" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/thanks.html" data-track-form="transport-quote-popup">
         <input type="hidden" name="form-name" value="transport-quote-popup">
         <input type="hidden" name="quote_id" value="">
         <p class="hidden-field"><label>입력하지 마세요 <input name="bot-field"></label></p>
@@ -344,5 +351,14 @@
 
   <script src="js/config.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/analytics.js"></script>
+  <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+  <script type="text/javascript">
+  if(!wcs_add) var wcs_add = {};
+  wcs_add["wa"] = "17b223d15bdab20";
+  if(window.wcs) {
+    wcs_do();
+  }
+  </script>
 </body>
 </html>

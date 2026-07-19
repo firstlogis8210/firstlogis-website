@@ -110,6 +110,17 @@ YYYY-MM-DD
 
 # 2026-07-19
 
+## ADS
+
+- [ADD] GA4 측정 ID `G-6EL5B8HR0W`를 공개 콘텐츠 페이지에 Google tag 방식으로 설치
+- [ADD] 네이버 애널리틱스 ID `17b223d15bdab20`을 공개 콘텐츠 페이지에 설치
+- [ADD] 전화, 카카오톡, 견적문의 시작·제출·완료 전환 이벤트 추가
+- [ADD] 실제 고객 동작을 막지 않는 메모리 기반 1.5초 중복 이벤트 방지 처리
+- [KEEP] 기존 SEO 메타데이터, Netlify Forms 구조 및 301 리다이렉트 유지
+- [STATUS] GitHub Push 및 Netlify 운영 배포하지 않음
+
+---
+
 ## FEATURE
 
 - [UPDATE] `transport-quote`, `transport-quote-popup` 필수 입력 설정 일치
