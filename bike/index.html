@@ -530,6 +530,15 @@ section{padding:62px 0}
 .bottom-box{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 38px;border-radius:25px;background:linear-gradient(120deg,#04172d,#0a3767);color:#fff}
 .bottom-box h2{font-size:30px;margin:0 0 3px} .bottom-box p{color:#c8d8e8;margin:0}
 .bottom-number{font-size:45px;font-weight:950;white-space:nowrap}
+.quote-section{padding:72px 0;background:#f3f7fc}
+.bike-quote{max-width:850px;margin:auto;padding:34px;border:1px solid var(--line);border-radius:25px;background:#fff;box-shadow:0 18px 45px rgba(9,44,84,.09)}
+.bike-quote-head{text-align:center;margin-bottom:27px}.bike-quote-head h2{margin:0 0 7px;font-size:32px}.bike-quote-head p{margin:0;color:var(--muted)}
+.bike-form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.bike-quote label{display:block;margin-bottom:15px;font-size:14px;font-weight:900}
+.bike-quote input,.bike-quote textarea{width:100%;margin-top:7px;padding:12px;border:1px solid #ccd7e5;border-radius:10px;background:#fff;font:inherit}
+.bike-upload{margin:0 0 16px;padding:15px;border:1px dashed #9db1c8;border-radius:12px;background:#f8fbff}.bike-upload legend{padding:0 5px;font-size:14px;font-weight:900}.bike-upload input{border:0;padding:5px 0}.bike-upload small{display:block;color:var(--muted)}
+.bike-privacy{display:flex!important;align-items:center;gap:8px}.bike-privacy input{width:auto;margin:0}.bike-privacy a{text-decoration:underline;color:#1267d6}
+.bike-submit{width:100%;padding:15px;border:0;border-radius:12px;background:linear-gradient(135deg,#3599ff,#1062d6);color:#fff;font-weight:950;cursor:pointer}.bike-submit:disabled{cursor:wait;opacity:.7}
+.hidden-field{position:absolute;left:-9999px}.file-error{min-height:1.5em;color:#b42318!important}.file-error:empty{display:none}.form-status{margin:12px 0 0;font-size:14px;font-weight:850;white-space:pre-line}.form-status.is-success{color:#087443}.form-status.is-error{color:#b42318}
 .mobile-call{display:none}
 
 @media(max-width:960px){
@@ -621,6 +630,7 @@ section{padding:62px 0}
   .compare-divider{margin:auto;width:48px;height:48px}
 
   .bottom-cta{padding-bottom:96px}
+  .quote-section{padding:46px 0}.bike-quote{padding:25px 18px}.bike-quote-head h2{font-size:27px}.bike-form-row{grid-template-columns:1fr}
   .bottom-box{display:block;padding:25px 22px} .bottom-number{font-size:36px;display:block;margin-top:13px}
   .mobile-call{position:fixed;display:block;left:0;right:0;bottom:0;z-index:120;padding:8px;background:#fff;border-top:1px solid var(--line);box-shadow:0 -10px 28px rgba(15,23,42,.14)}
   .mobile-call a{display:flex;align-items:center;justify-content:center;gap:9px;min-height:60px;border-radius:15px;background:linear-gradient(135deg,#3599ff,#1062d6);color:#fff;font-weight:950}
@@ -880,6 +890,37 @@ section{padding:62px 0}
   </div>
 </section>
 
+<section class="quote-section" id="quote">
+  <div class="wrap">
+    <form class="bike-quote" name="firstlogis-bike-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-bike-quote">
+      <div class="bike-quote-head"><h2>바이크탁송 견적문의</h2><p>운송 정보를 남겨주시면 확인 후 빠르게 연락드리겠습니다.</p></div>
+      <input type="hidden" name="form-name" value="firstlogis-bike-quote">
+      <input type="hidden" name="quote_id" value="">
+      <p class="hidden-field"><label>입력하지 마세요 <input name="bot-field"></label></p>
+      <div class="bike-form-row">
+        <label for="bike-name">성함<input id="bike-name" name="name" required autocomplete="name" maxlength="100"></label>
+        <label for="bike-phone">연락처<input id="bike-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="010-0000-0000"></label>
+      </div>
+      <div class="bike-form-row">
+        <label for="bike-from">출발지<input id="bike-from" name="from" required maxlength="200" placeholder="예: 서울 강남구 또는 상세 주소"></label>
+        <label for="bike-to">도착지<input id="bike-to" name="to" required maxlength="200" placeholder="예: 인천 서구 또는 상세 주소"></label>
+      </div>
+      <label for="bike-item">운송품목<input id="bike-item" name="item" required maxlength="200" placeholder="예: 바이크 기종 및 배기량"></label>
+      <fieldset class="bike-upload">
+        <legend>사진 첨부 (선택)</legend>
+        <label for="bike-photos">사진 선택</label><input id="bike-photos" name="cargo-photos" type="file" accept="image/*" multiple>
+        <small>바이크와 운송 상태를 확인할 수 있는 사진은 한 번에 최대 3장까지 선택할 수 있습니다.</small>
+        <small class="file-error" aria-live="polite"></small>
+        <span class="hidden-field" aria-hidden="true"><input type="file" name="cargo-photo-1"><input type="file" name="cargo-photo-2"><input type="file" name="cargo-photo-3"></span>
+      </fieldset>
+      <label for="bike-message">요청사항 (선택)<textarea id="bike-message" name="message" rows="4" maxlength="2000" placeholder="희망 일정과 요청사항을 남겨주세요."></textarea></label>
+      <label class="bike-privacy" for="bike-privacy"><input id="bike-privacy" type="checkbox" name="privacy-agree" required><span><a href="../docs/legal.html#privacy" target="_blank" rel="noopener">개인정보 수집 및 이용</a>에 동의합니다.</span></label>
+      <button class="bike-submit" type="submit">견적 문의 보내기</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
 <section class="bottom-cta">
   <div class="wrap bottom-box">
     <div><h2>전화 즉시 신속 배차</h2><p>바이크 기종과 상·하차지를 확인한 뒤 안전하게 운송합니다.</p></div>
@@ -928,6 +969,7 @@ viewport.addEventListener("touchend",event=>{
 },{passive:true});
 buildDots();requestAnimationFrame(move);restart();
 </script>
+<script src="../js/quote-form.js"></script>
 <script src="../js/analytics.js"></script>
 <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
 <script>
