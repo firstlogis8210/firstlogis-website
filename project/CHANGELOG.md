@@ -108,6 +108,35 @@ YYYY-MM-DD
 
 ---
 
+# 2026-07-19
+
+## FEATURE
+
+- [UPDATE] `transport-quote`, `transport-quote-popup` 필수 입력 설정 일치
+- [UPDATE] 연락처 숫자 길이 8~12자리 기본 검증 및 입력 편의 속성 적용
+- [UPDATE] Netlify Forms 호환 방식으로 사진 첨부 필드를 폼당 최대 3개로 확장
+- [UPDATE] JPG·PNG·WEBP 파일 형식 로컬 검증 및 접근 가능한 오류 안내 추가
+- [ADD] 개인정보를 포함하지 않는 `FL-YYYYMMDD-HHMMSS-XXXX` 형식의 `quote_id` 생성
+- [ADD] 정상 제출 시 해당 폼 버튼 중복 클릭 방지 및 bfcache 복원 처리
+- [UPDATE] 고유 input id와 label 연결, 모달 첫 입력 포커스 및 닫기 후 포커스 복귀
+
+## TEST
+
+- [DONE] JavaScript 문법 검사
+- [DONE] 중복 id, label 연결, form-name 일치 및 필수 필드 정적 검사
+- [DONE] EmailJS, fetch, FormData, API 키 및 이메일 주소 미추가 확인
+- [DONE] Live Server에서 필수값, 짧은 연락처, 사진 1장·3장, 개인정보 미동의 검증 확인
+- [DONE] 정상 제출 시 `/thanks.html` POST 이동 및 정적 Live Server의 예상된 HTTP 405 응답 확인
+- [PENDING] Netlify Forms 실제 접수, 사진 업로드 및 이메일 알림은 배포 후 확인 필요
+
+## NETLIFY
+
+- [KEEP] 기존 Netlify Forms 이름, hidden form-name, POST, action, honeypot 및 multipart 설정 유지
+- [KEEP] 관리자 이메일은 코드에 추가하지 않고 Netlify 대시보드 알림 설정 방식 유지
+- [STATUS] GitHub Push 및 Netlify 배포 전
+
+---
+
 # 작업 완료 절차
 
 작업이 완료되면 반드시 아래 순서를 따른다.

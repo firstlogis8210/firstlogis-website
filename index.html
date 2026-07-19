@@ -220,31 +220,35 @@
 
         <form class="quote-form" name="transport-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/thanks.html">
           <input type="hidden" name="form-name" value="transport-quote">
+          <input type="hidden" name="quote_id" value="">
           <p class="hidden-field"><label>입력하지 마세요 <input name="bot-field"></label></p>
 
           <div class="form-row">
-            <label>이름 또는 업체명<input name="name" required autocomplete="name"></label>
-            <label>연락처<input name="phone" type="tel" required autocomplete="tel" placeholder="010-0000-0000"></label>
+            <label for="quote-name">이름 또는 업체명<input id="quote-name" name="name" required autocomplete="name" maxlength="100"></label>
+            <label for="quote-phone">연락처<input id="quote-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="010-0000-0000"></label>
           </div>
           <div class="form-row">
-            <label>출발지<input name="from" required></label>
-            <label>도착지<input name="to" required></label>
+            <label for="quote-from">출발지<input id="quote-from" name="from" required maxlength="200" placeholder="예: 서울 강남구 또는 상세 주소"></label>
+            <label for="quote-to">도착지<input id="quote-to" name="to" required maxlength="200" placeholder="예: 인천 서구 또는 상세 주소"></label>
           </div>
           <div class="form-row">
-            <label>운송일<input name="date" type="date" required></label>
-            <label>운송 품목<input name="item" required placeholder="예: 서버랙, BMW 바이크"></label>
+            <label for="quote-date">운송일 (선택)<input id="quote-date" name="date" type="date"></label>
+            <label for="quote-item">운송 품목<input id="quote-item" name="item" required maxlength="200" placeholder="예: 바이크, 의료장비, 박스 3개"></label>
           </div>
 
-          <label>추가 요청사항<textarea name="message" rows="4" placeholder="크기, 중량, 리프트 필요 여부 등을 적어주세요."></textarea></label>
+          <label for="quote-message">추가 요청사항 (선택)<textarea id="quote-message" name="message" rows="4" maxlength="2000" placeholder="예: 차량 크기, 엘리베이터 여부, 희망시간 등"></textarea></label>
 
-          <label class="upload-box">
-            화물 사진 첨부
-            <input name="cargo-photo" type="file" accept="image/jpeg,image/png,image/webp">
-            <small>JPG·PNG·WEBP 1장, 가급적 8MB 이하</small>
-          </label>
+          <fieldset class="upload-box">
+            <legend>화물 사진 첨부 (선택)</legend>
+            <label for="quote-photo-1">사진 1</label><input id="quote-photo-1" name="cargo-photo" type="file" accept="image/jpeg,image/png,image/webp">
+            <label for="quote-photo-2">사진 2</label><input id="quote-photo-2" name="cargo-photo-2" type="file" accept="image/jpeg,image/png,image/webp">
+            <label for="quote-photo-3">사진 3</label><input id="quote-photo-3" name="cargo-photo-3" type="file" accept="image/jpeg,image/png,image/webp">
+            <small>운송품목 사진은 최대 3장까지 첨부할 수 있습니다.</small>
+            <small class="file-error" aria-live="polite"></small>
+          </fieldset>
 
-          <label class="agree">
-            <input type="checkbox" name="privacy-agree" required>
+          <label class="agree" for="quote-privacy">
+            <input id="quote-privacy" type="checkbox" name="privacy-agree" required>
             <span><a href="docs/legal.html#privacy" target="_blank" rel="noopener">개인정보 수집 및 이용</a>에 동의합니다.</span>
           </label>
 
@@ -310,19 +314,27 @@
 
       <form name="transport-quote-popup" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/thanks.html">
         <input type="hidden" name="form-name" value="transport-quote-popup">
+        <input type="hidden" name="quote_id" value="">
         <p class="hidden-field"><label>입력하지 마세요 <input name="bot-field"></label></p>
         <div class="form-row">
-          <label>이름 또는 업체명<input name="name" required></label>
-          <label>연락처<input name="phone" type="tel" required></label>
+          <label for="popup-name">이름 또는 업체명<input id="popup-name" name="name" required autocomplete="name" maxlength="100"></label>
+          <label for="popup-phone">연락처<input id="popup-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="010-0000-0000"></label>
         </div>
         <div class="form-row">
-          <label>출발지<input name="from" required></label>
-          <label>도착지<input name="to" required></label>
+          <label for="popup-from">출발지<input id="popup-from" name="from" required maxlength="200" placeholder="예: 서울 강남구 또는 상세 주소"></label>
+          <label for="popup-to">도착지<input id="popup-to" name="to" required maxlength="200" placeholder="예: 인천 서구 또는 상세 주소"></label>
         </div>
-        <label>운송 품목<input name="item" required></label>
-        <label>요청사항<textarea name="message" rows="3"></textarea></label>
-        <label class="upload-box">화물 사진<input name="cargo-photo" type="file" accept="image/jpeg,image/png,image/webp"><small>사진 1장, 가급적 8MB 이하</small></label>
-        <label class="agree"><input type="checkbox" name="privacy-agree" required><span><a href="docs/legal.html#privacy" target="_blank" rel="noopener">개인정보 수집 및 이용</a>에 동의합니다.</span></label>
+        <label for="popup-item">운송 품목<input id="popup-item" name="item" required maxlength="200" placeholder="예: 바이크, 의료장비, 박스 3개"></label>
+        <label for="popup-message">요청사항 (선택)<textarea id="popup-message" name="message" rows="3" maxlength="2000" placeholder="예: 차량 크기, 엘리베이터 여부, 희망시간 등"></textarea></label>
+        <fieldset class="upload-box">
+          <legend>화물 사진 첨부 (선택)</legend>
+          <label for="popup-photo-1">사진 1</label><input id="popup-photo-1" name="cargo-photo" type="file" accept="image/jpeg,image/png,image/webp">
+          <label for="popup-photo-2">사진 2</label><input id="popup-photo-2" name="cargo-photo-2" type="file" accept="image/jpeg,image/png,image/webp">
+          <label for="popup-photo-3">사진 3</label><input id="popup-photo-3" name="cargo-photo-3" type="file" accept="image/jpeg,image/png,image/webp">
+          <small>운송품목 사진은 최대 3장까지 첨부할 수 있습니다.</small>
+          <small class="file-error" aria-live="polite"></small>
+        </fieldset>
+        <label class="agree" for="popup-privacy"><input id="popup-privacy" type="checkbox" name="privacy-agree" required><span><a href="docs/legal.html#privacy" target="_blank" rel="noopener">개인정보 수집 및 이용</a>에 동의합니다.</span></label>
         <button class="btn btn-dark btn-block" type="submit">견적 문의 보내기</button>
       </form>
     </div>

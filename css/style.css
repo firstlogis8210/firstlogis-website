@@ -14,6 +14,7 @@
 
 /* Keep the footer Kakao link visually identical to the existing CTA buttons. */
 .footer-links .kakao-link{border:0;background:none;color:#bdc8d6;text-align:left;padding:0;cursor:pointer}
+.upload-box{margin:0 0 14px}.upload-box legend{font-size:13px;font-weight:900;padding:0 4px}.upload-box .file-error{color:#b42318;min-height:1.6em}.upload-box .file-error:empty{display:none}
 .floating-actions .float-kakao b{font-size:24px}
 .floating-actions .float-kakao span{font-size:12px;font-weight:900}
 .floating-actions .float-kakao small{font-size:10px;font-weight:800}
