@@ -225,11 +225,11 @@
           <a class="btn btn-primary" data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="quote-section">1661-8210 전화하기</a>
         </div>
 
-        <form class="quote-form" name="firstlogis-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-quote">
+        <form class="quote-form" name="firstlogis-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-quote">
           <input type="hidden" name="form-name" value="firstlogis-quote">
           <input type="hidden" name="form_source" value="main-inline">
           <input type="hidden" name="quote_id" value="">
-          <p class="hidden-field"><label>입력하지 마세요 <input name="bot-field"></label></p>
+          <p class="hidden-field" aria-hidden="true"><label>입력하지 마세요 <input type="text" name="bot-field" value="" autocomplete="off" tabindex="-1" aria-hidden="true"></label></p>
 
           <div class="form-row">
             <label for="quote-name">성함 (또는 업체명)<input id="quote-name" name="name" required autocomplete="name" maxlength="100"></label>
@@ -320,11 +320,11 @@
       <h2 id="quoteModalTitle">빠른 견적 문의</h2>
       <p>운송 조건과 사진을 보내주시면 확인 후 연락드립니다.</p>
 
-      <form name="firstlogis-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-quote">
+      <form name="firstlogis-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-quote">
         <input type="hidden" name="form-name" value="firstlogis-quote">
         <input type="hidden" name="form_source" value="main-popup">
         <input type="hidden" name="quote_id" value="">
-        <p class="hidden-field"><label>입력하지 마세요 <input name="bot-field"></label></p>
+        <p class="hidden-field" aria-hidden="true"><label>입력하지 마세요 <input type="text" name="bot-field" value="" autocomplete="off" tabindex="-1" aria-hidden="true"></label></p>
         <div class="form-row">
           <label for="popup-name">성함 (또는 업체명)<input id="popup-name" name="name" required autocomplete="name" maxlength="100"></label>
           <label for="popup-phone">연락처<input id="popup-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="010-0000-0000"></label>

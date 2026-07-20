@@ -9,6 +9,22 @@ Version : 1.0
 
 # 2026-07-20
 
+## BUG
+
+- [FIX] 메인 본문·팝업·바이크 폼 honeypot에 명시적 text 타입, 빈 값, 자동완성 차단, 포커스 제외 및 스크린리더 제외 속성 적용
+- [FIX] Netlify post-processing 이후에도 honeypot 이름을 식별하도록 `data-honeypot`을 유지하고 AJAX 제출 직전 기존 값을 제거한 뒤 빈 값 하나로 정규화
+- [KEEP] 공식 문서상 Spam 목록 저장은 honeypot 거부가 아닌 Akismet 분류이므로 체류시간 필드와 reCAPTCHA는 추가하지 않음
+
+## TEST
+
+- [ADD] 세 견적 폼의 honeypot 개수·필드명·기본값·접근성 속성·`form-name`·`form_source` 정적 테스트
+- [ADD] FormData honeypot 단일 빈 값 보정, 기존 사진 재구성·6MB 제한·POST 경로 및 브라우저 개인정보 로그 미추가 검사
+- [DONE] `submission-created.mjs`와 공통 메일 모듈 SHA-256 및 Git diff 무변경 확인
+- [PENDING] 현재 로컬 환경에 Node.js가 없어 작성한 `node:test` 자동 테스트 실행은 Node 환경에서 확인 필요
+- [PENDING] GitHub Push 및 Netlify 운영 배포하지 않음
+
+---
+
 ## NETLIFY
 
 - [FIX] 실제 제출 시 호출되지 않던 `formSubmitted` object handler를 공식 legacy filename convention인 `submission-created.mjs`로 전환

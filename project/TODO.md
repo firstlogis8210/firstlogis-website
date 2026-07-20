@@ -169,9 +169,9 @@ Version : 1.0
 - [x] JavaScript 문법 및 정적 구조 검사
 - [x] Live Server 브라우저 상호작용 테스트
 - [x] Live Server 제출 시도 및 정적 서버 POST 미지원 HTTP 405 확인
-- [ ] Netlify Forms 실제 접수 확인
+- [x] Netlify Forms 실제 접수 저장 확인
 - [ ] 사진 실제 업로드 확인
-- [ ] 이메일 알림 실제 수신 확인
+- [x] Spam 제출 수동 verified 전환 후 Resend 이메일 실제 수신 확인
 - [x] 로컬 제출 테스트 완료
 - [x] 검증 완료 폼 제출 Event Function 및 Resend 이메일 발송 구현
 - [x] 허용 폼 필터, HTML escape, 사진 링크 정규화 및 중복 발송 방지 구현
@@ -180,8 +180,9 @@ Version : 1.0
 - [x] `form-name` 누락 시 `form_source` 기반 허용 폼 보조 판별 추가
 - [x] 미호출 `formSubmitted` object handler를 legacy `submission-created.mjs` 이벤트 방식으로 전환
 - [x] legacy `payload.form_name`·`payload.data`·제출 식별자·접수시각 파싱 및 안전 종료 구현
-- [ ] Netlify 배포 빌드에서 `submission-created` Function 인식 및 invocation 로그 확인
-- [ ] 메인 본문·메인 팝업·바이크 폼 Resend 실제 수신 확인
+- [x] Netlify 배포 빌드에서 `submission-created` Function 실행 및 Resend HTTP 200 확인
+- [x] 메인 본문·메인 팝업·바이크 폼 honeypot 마크업 및 AJAX 빈 값 정규화 보완
+- [ ] 서로 다른 실제 형식 데이터로 Verified 자동 분류 및 메인·팝업·바이크 Resend 실제 수신 확인
 
 ---
 

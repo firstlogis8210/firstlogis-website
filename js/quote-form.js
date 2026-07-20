@@ -81,6 +81,16 @@
     status.focus?.();
   }
 
+  function normalizeHoneypot(form, formData) {
+    const honeypotName = form.dataset.honeypot || form.getAttribute("netlify-honeypot");
+    if (!honeypotName) return;
+
+    const honeypotInput = form.elements.namedItem(honeypotName);
+    if (honeypotInput instanceof HTMLInputElement) honeypotInput.value = "";
+    formData.delete(honeypotName);
+    formData.set(honeypotName, "");
+  }
+
   forms.forEach(form => {
     const phone = form.elements.phone;
     const photos = form.querySelector('input[type="file"][multiple]');
@@ -105,6 +115,7 @@
 
       try {
         const formData = new FormData(form);
+        normalizeHoneypot(form, formData);
         formData.delete("cargo-photos");
         [1, 2, 3].forEach(index => formData.delete(`cargo-photo-${index}`));
         [...(photos?.files || [])].forEach((file, index) => formData.set(`cargo-photo-${index + 1}`, file));
