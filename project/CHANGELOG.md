@@ -9,6 +9,23 @@ Version : 1.0
 
 # 2026-07-20
 
+## BUG
+
+- [FIX] `form-name`이 Event payload에서 누락되어도 `form_source`로 허용 폼을 판별하도록 보완
+- [ADD] Event Function 진입, 제외, 설정 누락, Resend 요청 시작·성공·실패 단계의 비식별 진단 로그 추가
+- [ADD] 로그의 알 수 없는 폼 이름·출처 값을 `unknown`으로 정규화해 개인정보성 값 기록 방지
+- [ADD] Resend 성공 응답의 안전한 message id 및 실패 유형만 제한적으로 기록
+- [KEEP] 기존 `formSubmitted` Event Function 방식과 Resend 보안·idempotency·재시도 로직 유지
+
+## TEST
+
+- [ADD] 직접 폼 이름 및 메인 본문·팝업·바이크 `form_source` 보조 판별 테스트
+- [ADD] 알 수 없는 출처 무시, 로그 개인정보 값 제외 및 API 키 하드코딩 방지 테스트
+- [PENDING] 현재 로컬 환경에 Node.js가 없어 작성한 `node:test` 자동 테스트 실행은 Node 환경에서 확인 필요
+- [PENDING] GitHub Push 및 Netlify 운영 배포하지 않음
+
+---
+
 ## FEATURE
 
 - [ADD] 검증된 Netlify Forms 제출 후 실행되는 `formSubmitted` Event Function 추가

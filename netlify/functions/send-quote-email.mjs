@@ -6,6 +6,11 @@ const FORM_SOURCE_LABELS = {
   "main-popup": "메인 팝업",
   "bike-inline": "바이크 랜딩페이지"
 };
+const FORM_SOURCE_TO_FORM = {
+  "main-inline": "firstlogis-quote",
+  "main-popup": "firstlogis-quote",
+  "bike-inline": "firstlogis-bike-quote"
+};
 const PHOTO_FIELDS = ["cargo-photo-1", "cargo-photo-2", "cargo-photo-3"];
 const IMAGE_EXTENSIONS = /\.(?:avif|bmp|gif|heic|heif|jpe?g|png|webp)$/i;
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
@@ -117,12 +122,27 @@ function formatReceivedAt(date) {
   }).format(date);
 }
 
-function getFormName(data) {
-  return cleanText(data?.["form-name"] ?? data?.form_name ?? data?.formName, "");
+function getFormSource(data) {
+  return cleanText(data?.form_source ?? data?.["form-source"] ?? data?.formSource, "");
+}
+
+export function resolveFormContext(data) {
+  const directFormName = cleanText(data?.["form-name"] ?? data?.form_name ?? data?.formName, "");
+  const formSource = getFormSource(data);
+  const formName = directFormName || FORM_SOURCE_TO_FORM[formSource] || "";
+
+  return {
+    formName,
+    formSource,
+    logFormName: ALLOWED_FORMS.has(formName) ? formName : "unknown",
+    logFormSource: Object.hasOwn(FORM_SOURCE_TO_FORM, formSource)
+      ? formSource
+      : formSource ? "unknown" : "missing"
+  };
 }
 
 export function buildEmail(data, quoteId, receivedAt = new Date()) {
-  const source = FORM_SOURCE_LABELS[data.form_source] || "구분되지 않은 견적 폼";
+  const source = FORM_SOURCE_LABELS[getFormSource(data)] || "구분되지 않은 견적 폼";
   const photos = normalizePhotoLinks(data);
   const values = {
     quoteId,
@@ -214,11 +234,24 @@ export async function sendWithRetry({ apiKey, email, idempotencyKey, fetchImpl =
         await waitImpl(400 * 2 ** (attempt - 1));
         continue;
       }
-      throw new Error("Resend network request failed");
+      const error = new Error("Resend network request failed");
+      error.kind = "network";
+      error.status = 0;
+      throw error;
     }
 
     lastStatus = response.status;
-    if (response.ok) return { ok: true, status: response.status, attempts: attempt };
+    if (response.ok) {
+      let messageId = "";
+      try {
+        const responseBody = await response.json();
+        const candidate = String(responseBody?.id ?? "");
+        if (/^[A-Za-z0-9_-]{1,128}$/.test(candidate)) messageId = candidate;
+      } catch {
+        // A successful response without JSON is still a successful delivery request.
+      }
+      return { ok: true, status: response.status, attempts: attempt, messageId };
+    }
     if (!retryableStatus(response.status) || attempt === MAX_ATTEMPTS) break;
 
     const retryAfter = Number(response.headers?.get?.("retry-after"));
@@ -228,18 +261,33 @@ export async function sendWithRetry({ apiKey, email, idempotencyKey, fetchImpl =
     await waitImpl(delay);
   }
 
-  throw new Error(`Resend HTTP ${lastStatus}`);
+  const error = new Error(`Resend HTTP ${lastStatus}`);
+  error.kind = "http";
+  error.status = lastStatus;
+  throw error;
 }
 
 export async function handleFormSubmitted(event, dependencies = {}) {
   const data = event?.data && typeof event.data === "object" ? event.data : {};
-  const formName = getFormName(data);
-  if (!ALLOWED_FORMS.has(formName)) return { ignored: true };
+  const dataKeys = Object.keys(data).sort();
+  const { formName, logFormName, logFormSource } = resolveFormContext(data);
+  if (!ALLOWED_FORMS.has(formName)) {
+    console.info("[quote-email] event ignored", {
+      formName: logFormName,
+      formSource: logFormSource,
+      dataKeys
+    });
+    return { ignored: true };
+  }
 
   const { quoteId, idempotencyKey } = await resolveIdentifiers(event, data);
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.error("Resend configuration error", { quoteId, formName, code: "MISSING_RESEND_API_KEY" });
+    console.error("[quote-email] configuration missing", {
+      quoteId,
+      formName,
+      code: "MISSING_RESEND_API_KEY"
+    });
     return { ok: false, configurationError: true };
   }
 
@@ -247,8 +295,13 @@ export async function handleFormSubmitted(event, dependencies = {}) {
     const email = buildEmail(data, quoteId);
     const rejectedFields = rejectedPhotoFields(data);
     if (rejectedFields.length) {
-      console.warn("Netlify photo payload rejected", { quoteId, formName, fields: rejectedFields });
+      console.warn("[quote-email] photo payload rejected", { quoteId, formName, fields: rejectedFields });
     }
+    console.info("[quote-email] resend request started", {
+      quoteId,
+      formName,
+      photoCount: email.photoCount
+    });
     const result = await sendWithRetry({
       apiKey,
       email,
@@ -256,22 +309,28 @@ export async function handleFormSubmitted(event, dependencies = {}) {
       fetchImpl: dependencies.fetchImpl,
       waitImpl: dependencies.waitImpl
     });
-    console.info("Resend quote notification sent", {
+    console.info("[quote-email] resend request succeeded", {
       quoteId,
       formName,
       status: result.status,
-      photoCount: email.photoCount
+      ...(result.messageId ? { messageId: result.messageId } : {})
     });
     return result;
   } catch (error) {
-    const status = /HTTP (\d+)/.exec(error?.message || "")?.[1] || 0;
-    console.error("Resend quote notification failed", { quoteId, formName, status });
-    return { ok: false, status: Number(status) };
+    const status = Number(error?.status ?? /HTTP (\d+)/.exec(error?.message || "")?.[1] ?? 0);
+    const errorType = ["network", "http"].includes(error?.kind) ? error.kind : "unknown";
+    console.error("[quote-email] resend request failed", { quoteId, formName, status, errorType });
+    return { ok: false, status };
   }
 }
 
 export default {
   async formSubmitted(event) {
+    console.info("[quote-email] event received", {
+      eventType: "formSubmitted",
+      hasData: Boolean(event?.data),
+      dataKeys: Object.keys(event?.data ?? {}).sort()
+    });
     await handleFormSubmitted(event);
   }
 };

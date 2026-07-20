@@ -1,10 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
+import { readFile } from "node:fs/promises";
+import eventFunction, {
   buildEmail,
   escapeHtml,
   handleFormSubmitted,
   normalizePhotoLinks,
+  resolveFormContext,
   resolveIdentifiers,
   sendWithRetry
 } from "../netlify/functions/send-quote-email.mjs";
@@ -20,6 +22,53 @@ const baseData = {
   item: "바이크",
   message: "안전 운송 요청"
 };
+
+async function captureConsole(callback) {
+  const original = { info: console.info, warn: console.warn, error: console.error };
+  const entries = [];
+  for (const level of Object.keys(original)) {
+    console[level] = (...args) => entries.push({ level, args });
+  }
+  try {
+    await callback();
+  } finally {
+    Object.assign(console, original);
+  }
+  return entries;
+}
+
+test("form name resolves directly or from all supported source fields", () => {
+  assert.equal(resolveFormContext({ "form-name": "firstlogis-quote" }).formName, "firstlogis-quote");
+  assert.equal(resolveFormContext({ form_source: "main-inline" }).formName, "firstlogis-quote");
+  assert.equal(resolveFormContext({ "form-source": "main-popup" }).formName, "firstlogis-quote");
+  assert.equal(resolveFormContext({ formSource: "bike-inline" }).formName, "firstlogis-bike-quote");
+  assert.equal(resolveFormContext({ form_source: "unknown-source" }).formName, "");
+});
+
+test("unknown source is ignored and diagnostic logs exclude personal values", async () => {
+  const personalValues = ["홍길동", "010-9999-8888", "서울 강남구", "비밀 요청", "https://private.example/photo.jpg"];
+  const data = {
+    form_source: "unknown-source",
+    name: personalValues[0],
+    phone: personalValues[1],
+    from: personalValues[2],
+    message: personalValues[3],
+    "cargo-photo-1": personalValues[4]
+  };
+  const entries = await captureConsole(() => eventFunction.formSubmitted({ data }));
+  const serialized = JSON.stringify(entries);
+
+  assert.match(serialized, /event received/);
+  assert.match(serialized, /event ignored/);
+  assert.match(serialized, /dataKeys/);
+  for (const value of personalValues) assert.doesNotMatch(serialized, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+});
+
+test("source contains no hardcoded Resend API key", async () => {
+  const source = await readFile(new URL("../netlify/functions/send-quote-email.mjs", import.meta.url), "utf8");
+  assert.match(source, /process\.env\.RESEND_API_KEY/);
+  assert.doesNotMatch(source, /re_[A-Za-z0-9]{20,}/);
+});
 
 test("HTML escape handles user-controlled markup", () => {
   assert.equal(escapeHtml(`<script>"x" & 'y'</script>`), "&lt;script&gt;&quot;x&quot; &amp; &#39;y&#39;&lt;/script&gt;");
@@ -78,7 +127,7 @@ test("only allowed forms send and Idempotency-Key is forwarded", async () => {
   const requests = [];
   const fetchImpl = async (url, options) => {
     requests.push({ url, options });
-    return { ok: true, status: 200, headers: new Headers() };
+    return { ok: true, status: 200, headers: new Headers(), json: async () => ({ id: "email_test123" }) };
   };
 
   try {
@@ -91,6 +140,24 @@ test("only allowed forms send and Idempotency-Key is forwarded", async () => {
     assert.equal(requests.length, 1);
     assert.equal(requests[0].options.headers["Idempotency-Key"], `firstlogis-quote-${baseData.quote_id}`);
     assert.equal(requests[0].options.headers.Authorization, "Bearer test-only-key");
+
+    const withoutFormName = { ...baseData };
+    delete withoutFormName["form-name"];
+    for (const formSource of ["main-inline", "main-popup", "bike-inline"]) {
+      const fallbackSent = await handleFormSubmitted(
+        { data: { ...withoutFormName, form_source: formSource } },
+        { fetchImpl, waitImpl: async () => {} }
+      );
+      assert.equal(fallbackSent.ok, true);
+    }
+    assert.equal(requests.length, 4);
+
+    const unknownSource = await handleFormSubmitted(
+      { data: { ...withoutFormName, form_source: "unknown-source" } },
+      { fetchImpl }
+    );
+    assert.equal(unknownSource.ignored, true);
+    assert.equal(requests.length, 4);
   } finally {
     if (originalKey === undefined) delete process.env.RESEND_API_KEY;
     else process.env.RESEND_API_KEY = originalKey;
