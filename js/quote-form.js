@@ -5,7 +5,7 @@
   const successMessage = "견적문의가 정상적으로 접수되었습니다.\n확인 후 빠르게 연락드리겠습니다.";
   const errorMessage = "견적문의 접수 중 오류가 발생했습니다.\n잠시 후 다시 시도하시거나 1661-8210으로 전화해 주세요.";
   const imageExtensionPattern = /\.(?:avif|bmp|gif|heic|heif|jpe?g|png|webp)$/i;
-  const maxAttachmentBytes = 7 * 1024 * 1024;
+  const maxAttachmentBytes = 6 * 1024 * 1024;
 
   document.addEventListener("firstlogis:quote-success", event => {
     if (typeof window.gtag !== "function") return;
@@ -48,7 +48,7 @@
       : !imagesOnly
         ? "이미지 파일만 첨부할 수 있습니다."
         : !withinSize
-          ? "첨부파일 전체 용량은 7MB 이하여야 합니다."
+          ? "첨부파일 전체 용량은 6MB 이하여야 합니다."
           : "";
     input?.setCustomValidity(message);
     const error = input?.closest("fieldset")?.querySelector(".file-error");

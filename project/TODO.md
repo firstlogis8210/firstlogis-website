@@ -5,7 +5,7 @@
 
 # 퍼스트물류 프로젝트 TODO
 
-> Last Update : 2026-07-19
+> Last Update : 2026-07-20
 Version : 1.0
 
 ## 2026-07-19 바이크 전용 랜딩페이지
@@ -173,6 +173,11 @@ Version : 1.0
 - [ ] 사진 실제 업로드 확인
 - [ ] 이메일 알림 실제 수신 확인
 - [x] 로컬 제출 테스트 완료
+- [x] 검증 완료 폼 제출 Event Function 및 Resend 이메일 발송 구현
+- [x] 허용 폼 필터, HTML escape, 사진 링크 정규화 및 중복 발송 방지 구현
+- [x] Resend 429·5xx 제한 재시도 및 개인정보 비기록 오류 처리 구현
+- [ ] Netlify 배포 빌드에서 `formSubmitted` Event Function 인식 확인
+- [ ] 메인 본문·메인 팝업·바이크 폼 Resend 실제 수신 확인
 
 ---
 

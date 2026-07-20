@@ -4,8 +4,35 @@
 > 진행 중인 작업은 TODO.md에서 관리한다.
 > 프로젝트 기준은 MASTER.md를 따른다.
 
-Last Update : 2026-07-14
+Last Update : 2026-07-20
 Version : 1.0
+
+# 2026-07-20
+
+## FEATURE
+
+- [ADD] 검증된 Netlify Forms 제출 후 실행되는 `formSubmitted` Event Function 추가
+- [ADD] Resend REST API를 통한 `firstlogisqnote@gmail.com` 견적 알림 발송 구현
+- [ADD] 메인 본문·메인 팝업·바이크 랜딩페이지 구분용 hidden `form_source` 추가
+- [ADD] HTML·plain text 메일 본문, 사용자 입력 HTML escape 및 사진 0~3장 링크 처리
+- [ADD] `quote_id` 기반 Resend Idempotency-Key와 결정적 대체 견적번호 생성
+- [ADD] Resend 429·5xx 최대 3회 재시도 및 개인정보를 제외한 제한 로그 처리
+- [UPDATE] Netlify multipart 요청 여유 확보를 위해 사진 총용량 제한을 7MB에서 6MB로 조정
+
+## SECURITY
+
+- [KEEP] Resend API 키는 Netlify Function의 `process.env.RESEND_API_KEY`로만 접근
+- [ADD] 허용 폼 이름 필터, HTTPS 이미지 링크 및 이미지 MIME·확장자 검증
+- [KEEP] 메일 실패가 Netlify Forms 저장 및 고객 성공 화면에 영향을 주지 않는 비동기 이벤트 구조 적용
+
+## TEST
+
+- [DONE] API 키 하드코딩, 허용 폼, HTML escape, 사진 0·1·3장, idempotency 및 재시도 자동 테스트 작성
+- [DONE] 폼 이름·hidden 출처·6MB 제한·기존 AJAX 및 분석 스크립트 정적 검증
+- [PENDING] 현재 로컬 환경에 Node.js가 없어 작성한 `node:test` 자동 테스트 실행은 Netlify 빌드 또는 Node 환경에서 확인 필요
+- [PENDING] GitHub Push 및 Netlify 운영 배포하지 않음
+
+---
 
 # 2026-07-19
 
