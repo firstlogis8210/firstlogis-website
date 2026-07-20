@@ -178,7 +178,9 @@ Version : 1.0
 - [x] Resend 429·5xx 제한 재시도 및 개인정보 비기록 오류 처리 구현
 - [x] Event Function 진입·종료·Resend 요청 단계 비식별 진단 로그 추가
 - [x] `form-name` 누락 시 `form_source` 기반 허용 폼 보조 판별 추가
-- [ ] Netlify 배포 빌드에서 `formSubmitted` Event Function 인식 확인
+- [x] 미호출 `formSubmitted` object handler를 legacy `submission-created.mjs` 이벤트 방식으로 전환
+- [x] legacy `payload.form_name`·`payload.data`·제출 식별자·접수시각 파싱 및 안전 종료 구현
+- [ ] Netlify 배포 빌드에서 `submission-created` Function 인식 및 invocation 로그 확인
 - [ ] 메인 본문·메인 팝업·바이크 폼 Resend 실제 수신 확인
 
 ---

@@ -9,6 +9,22 @@ Version : 1.0
 
 # 2026-07-20
 
+## NETLIFY
+
+- [FIX] 실제 제출 시 호출되지 않던 `formSubmitted` object handler를 공식 legacy filename convention인 `submission-created.mjs`로 전환
+- [UPDATE] 메일 생성·Resend 호출 로직을 함수 디렉터리 밖 공통 모듈로 분리하고 배포 대상 Function을 `submission-created` 하나로 정리
+- [ADD] legacy 요청의 `payload.form_name`, `payload.data`, 제출 식별자 및 접수시각 파싱과 잘못된 JSON·누락 payload 안전 종료 처리
+- [KEEP] 기존 허용 폼 필터, HTML escape, 사진 링크 정규화, idempotency 및 429·5xx 최대 3회 재시도 유지
+
+## TEST
+
+- [ADD] legacy payload 폼 판별 우선순위, `form_source` 보조 판별, 잘못된 요청 안전 종료 및 단일 배포 이벤트 검사
+- [UPDATE] 사진 0·1·3장 테스트에 legacy 파일 객체·배열 URL 구조 정규화 사례 추가
+- [PENDING] 현재 로컬 환경에 Node.js가 없어 작성한 `node:test` 자동 테스트 실행은 Node 환경에서 확인 필요
+- [PENDING] GitHub Push 및 Netlify 운영 배포하지 않음
+
+---
+
 ## BUG
 
 - [FIX] `form-name`이 Event payload에서 누락되어도 `form_source`로 허용 폼을 판별하도록 보완

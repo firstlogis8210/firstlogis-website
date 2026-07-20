@@ -67,6 +67,15 @@ export async function resolveIdentifiers(event, data, now = new Date()) {
 }
 
 function collectUrlCandidates(value) {
+  if (Array.isArray(value)) return value.flatMap(collectUrlCandidates);
+  if (value && typeof value === "object") {
+    return [value.url, value.secure_url, value.href]
+      .filter(item => typeof item === "string")
+      .map(url => ({
+        url,
+        mime: String(value.content_type ?? value.contentType ?? value.mime_type ?? value.mimeType ?? "")
+      }));
+  }
   if (typeof value !== "string") return [];
   const trimmed = value.trim();
   if (!trimmed) return [];
@@ -74,12 +83,7 @@ function collectUrlCandidates(value) {
   try {
     const parsed = JSON.parse(trimmed);
     if (typeof parsed === "string") return [{ url: parsed, mime: "" }];
-    if (Array.isArray(parsed)) return parsed.flatMap(item => collectUrlCandidates(JSON.stringify(item)));
-    if (parsed && typeof parsed === "object") {
-      return [parsed.url, parsed.secure_url, parsed.href]
-        .filter(item => typeof item === "string")
-        .map(url => ({ url, mime: String(parsed.content_type ?? parsed.contentType ?? parsed.mime_type ?? parsed.mimeType ?? "") }));
-    }
+    if (Array.isArray(parsed) || (parsed && typeof parsed === "object")) return collectUrlCandidates(parsed);
   } catch {
     // Netlify normally supplies the uploaded-file URL as a plain string.
   }
@@ -126,8 +130,11 @@ function getFormSource(data) {
   return cleanText(data?.form_source ?? data?.["form-source"] ?? data?.formSource, "");
 }
 
-export function resolveFormContext(data) {
-  const directFormName = cleanText(data?.["form-name"] ?? data?.form_name ?? data?.formName, "");
+export function resolveFormContext(payload, data) {
+  const directFormName = cleanText(
+    payload?.form_name ?? data?.["form-name"] ?? data?.form_name,
+    ""
+  );
   const formSource = getFormSource(data);
   const formName = directFormName || FORM_SOURCE_TO_FORM[formSource] || "";
 
@@ -267,12 +274,14 @@ export async function sendWithRetry({ apiKey, email, idempotencyKey, fetchImpl =
   throw error;
 }
 
-export async function handleFormSubmitted(event, dependencies = {}) {
-  const data = event?.data && typeof event.data === "object" ? event.data : {};
+export async function handleQuoteSubmission(payload, dependencies = {}) {
+  const data = payload?.data && typeof payload.data === "object" && !Array.isArray(payload.data)
+    ? payload.data
+    : {};
   const dataKeys = Object.keys(data).sort();
-  const { formName, logFormName, logFormSource } = resolveFormContext(data);
+  const { formName, logFormName, logFormSource } = resolveFormContext(payload, data);
   if (!ALLOWED_FORMS.has(formName)) {
-    console.info("[quote-email] event ignored", {
+    console.info("[quote-email] submission ignored", {
       formName: logFormName,
       formSource: logFormSource,
       dataKeys
@@ -280,7 +289,10 @@ export async function handleFormSubmitted(event, dependencies = {}) {
     return { ignored: true };
   }
 
-  const { quoteId, idempotencyKey } = await resolveIdentifiers(event, data);
+  const { quoteId, idempotencyKey } = await resolveIdentifiers(
+    { id: payload?.id ?? payload?.submission_id },
+    data
+  );
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("[quote-email] configuration missing", {
@@ -292,7 +304,9 @@ export async function handleFormSubmitted(event, dependencies = {}) {
   }
 
   try {
-    const email = buildEmail(data, quoteId);
+    const suppliedDate = new Date(payload?.created_at ?? "");
+    const receivedAt = Number.isNaN(suppliedDate.getTime()) ? new Date() : suppliedDate;
+    const email = buildEmail(data, quoteId, receivedAt);
     const rejectedFields = rejectedPhotoFields(data);
     if (rejectedFields.length) {
       console.warn("[quote-email] photo payload rejected", { quoteId, formName, fields: rejectedFields });
@@ -323,14 +337,3 @@ export async function handleFormSubmitted(event, dependencies = {}) {
     return { ok: false, status };
   }
 }
-
-export default {
-  async formSubmitted(event) {
-    console.info("[quote-email] event received", {
-      eventType: "formSubmitted",
-      hasData: Boolean(event?.data),
-      dataKeys: Object.keys(event?.data ?? {}).sort()
-    });
-    await handleFormSubmitted(event);
-  }
-};

@@ -1,15 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import eventFunction, {
+import { handleSubmissionCreated } from "../netlify/functions/submission-created.mjs";
+import {
   buildEmail,
   escapeHtml,
-  handleFormSubmitted,
+  handleQuoteSubmission,
   normalizePhotoLinks,
   resolveFormContext,
   resolveIdentifiers,
   sendWithRetry
-} from "../netlify/functions/send-quote-email.mjs";
+} from "../netlify/lib/quote-email.mjs";
 
 const baseData = {
   "form-name": "firstlogis-quote",
@@ -37,12 +38,22 @@ async function captureConsole(callback) {
   return entries;
 }
 
+function legacyRequest(payload) {
+  return new Request("https://example.test/.netlify/functions/submission-created", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ payload })
+  });
+}
+
 test("form name resolves directly or from all supported source fields", () => {
-  assert.equal(resolveFormContext({ "form-name": "firstlogis-quote" }).formName, "firstlogis-quote");
-  assert.equal(resolveFormContext({ form_source: "main-inline" }).formName, "firstlogis-quote");
-  assert.equal(resolveFormContext({ "form-source": "main-popup" }).formName, "firstlogis-quote");
-  assert.equal(resolveFormContext({ formSource: "bike-inline" }).formName, "firstlogis-bike-quote");
-  assert.equal(resolveFormContext({ form_source: "unknown-source" }).formName, "");
+  assert.equal(resolveFormContext({ form_name: "firstlogis-bike-quote" }, { "form-name": "firstlogis-quote" }).formName, "firstlogis-bike-quote");
+  assert.equal(resolveFormContext({}, { "form-name": "firstlogis-quote" }).formName, "firstlogis-quote");
+  assert.equal(resolveFormContext({}, { form_name: "firstlogis-bike-quote" }).formName, "firstlogis-bike-quote");
+  assert.equal(resolveFormContext({}, { form_source: "main-inline" }).formName, "firstlogis-quote");
+  assert.equal(resolveFormContext({}, { "form-source": "main-popup" }).formName, "firstlogis-quote");
+  assert.equal(resolveFormContext({}, { formSource: "bike-inline" }).formName, "firstlogis-bike-quote");
+  assert.equal(resolveFormContext({}, { form_source: "unknown-source" }).formName, "");
 });
 
 test("unknown source is ignored and diagnostic logs exclude personal values", async () => {
@@ -55,17 +66,21 @@ test("unknown source is ignored and diagnostic logs exclude personal values", as
     message: personalValues[3],
     "cargo-photo-1": personalValues[4]
   };
-  const entries = await captureConsole(() => eventFunction.formSubmitted({ data }));
+  const entries = await captureConsole(() => handleSubmissionCreated(legacyRequest({ data })));
   const serialized = JSON.stringify(entries);
 
   assert.match(serialized, /event received/);
-  assert.match(serialized, /event ignored/);
+  assert.match(serialized, /submission ignored/);
   assert.match(serialized, /dataKeys/);
   for (const value of personalValues) assert.doesNotMatch(serialized, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 });
 
 test("source contains no hardcoded Resend API key", async () => {
-  const source = await readFile(new URL("../netlify/functions/send-quote-email.mjs", import.meta.url), "utf8");
+  const sources = await Promise.all([
+    readFile(new URL("../netlify/functions/submission-created.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../netlify/lib/quote-email.mjs", import.meta.url), "utf8")
+  ]);
+  const source = sources.join("\n");
   assert.match(source, /process\.env\.RESEND_API_KEY/);
   assert.doesNotMatch(source, /re_[A-Za-z0-9]{20,}/);
 });
@@ -86,8 +101,8 @@ test("photo payload supports zero, one, and three links", () => {
 
   const three = {
     ...one,
-    "cargo-photo-2": JSON.stringify({ url: "https://files.example.com/photo-2", content_type: "image/png" }),
-    "cargo-photo-3": "https://files.example.com/photo-3.webp"
+    "cargo-photo-2": { url: "https://files.example.com/photo-2", content_type: "image/png" },
+    "cargo-photo-3": [{ secure_url: "https://files.example.com/photo-3.webp", contentType: "image/webp" }]
   };
   assert.deepEqual(normalizePhotoLinks(three), [
     "https://files.example.com/photo-1.jpg",
@@ -116,6 +131,13 @@ test("fallback quote and idempotency identifiers are deterministic", async () =>
   const supplied = await resolveIdentifiers({}, baseData, now);
   assert.match(supplied.idempotencyKey, /FL-20260720-120000-ABCD$/);
 
+  const submissionFallback = await resolveIdentifiers(
+    { id: "submission-stable-123" },
+    { ...baseData, quote_id: "" },
+    now
+  );
+  assert.equal(submissionFallback.idempotencyKey, "firstlogis-quote-submission-stable-123");
+
   const unsafe = await resolveIdentifiers({}, { ...baseData, quote_id: "bad\nvalue" }, now);
   assert.match(unsafe.quoteId, /^Q20260720-[A-F0-9]{8}$/);
   assert.doesNotMatch(unsafe.idempotencyKey, /bad/);
@@ -131,11 +153,11 @@ test("only allowed forms send and Idempotency-Key is forwarded", async () => {
   };
 
   try {
-    const ignored = await handleFormSubmitted({ data: { ...baseData, "form-name": "other-form" } }, { fetchImpl });
+    const ignored = await handleQuoteSubmission({ data: { ...baseData, "form-name": "other-form" } }, { fetchImpl });
     assert.equal(ignored.ignored, true);
     assert.equal(requests.length, 0);
 
-    const sent = await handleFormSubmitted({ data: baseData }, { fetchImpl, waitImpl: async () => {} });
+    const sent = await handleQuoteSubmission({ form_name: "firstlogis-quote", id: "submission-1", data: baseData }, { fetchImpl, waitImpl: async () => {} });
     assert.equal(sent.ok, true);
     assert.equal(requests.length, 1);
     assert.equal(requests[0].options.headers["Idempotency-Key"], `firstlogis-quote-${baseData.quote_id}`);
@@ -144,7 +166,7 @@ test("only allowed forms send and Idempotency-Key is forwarded", async () => {
     const withoutFormName = { ...baseData };
     delete withoutFormName["form-name"];
     for (const formSource of ["main-inline", "main-popup", "bike-inline"]) {
-      const fallbackSent = await handleFormSubmitted(
+      const fallbackSent = await handleQuoteSubmission(
         { data: { ...withoutFormName, form_source: formSource } },
         { fetchImpl, waitImpl: async () => {} }
       );
@@ -152,7 +174,7 @@ test("only allowed forms send and Idempotency-Key is forwarded", async () => {
     }
     assert.equal(requests.length, 4);
 
-    const unknownSource = await handleFormSubmitted(
+    const unknownSource = await handleQuoteSubmission(
       { data: { ...withoutFormName, form_source: "unknown-source" } },
       { fetchImpl }
     );
@@ -186,11 +208,11 @@ test("missing API key and Resend failure are contained", async () => {
   const originalKey = process.env.RESEND_API_KEY;
   delete process.env.RESEND_API_KEY;
   try {
-    const missing = await handleFormSubmitted({ data: baseData });
+    const missing = await handleQuoteSubmission({ data: baseData });
     assert.equal(missing.configurationError, true);
 
     process.env.RESEND_API_KEY = "test-only-key";
-    const failed = await handleFormSubmitted({ data: baseData }, {
+    const failed = await handleQuoteSubmission({ data: baseData }, {
       fetchImpl: async () => ({ ok: false, status: 500, headers: new Headers() }),
       waitImpl: async () => {}
     });
@@ -199,4 +221,63 @@ test("missing API key and Resend failure are contained", async () => {
     if (originalKey === undefined) delete process.env.RESEND_API_KEY;
     else process.env.RESEND_API_KEY = originalKey;
   }
+});
+
+test("successful delivery logs contain no personal values", async () => {
+  const originalKey = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = "test-only-key";
+  try {
+    const entries = await captureConsole(() => handleQuoteSubmission({ data: baseData }, {
+      fetchImpl: async () => ({
+        ok: true,
+        status: 200,
+        headers: new Headers(),
+        json: async () => ({ id: "email_safe123" })
+      }),
+      waitImpl: async () => {}
+    }));
+    const serialized = JSON.stringify(entries);
+    for (const value of [baseData.name, baseData.phone, baseData.from, baseData.to, baseData.item, baseData.message]) {
+      assert.doesNotMatch(serialized, new RegExp(value));
+    }
+    assert.match(serialized, /email_safe123/);
+  } finally {
+    if (originalKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = originalKey;
+  }
+});
+
+test("legacy request payload is parsed and invalid requests exit safely", async () => {
+  const originalKey = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = "test-only-key";
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls += 1;
+    return { ok: true, status: 200, headers: new Headers(), json: async () => ({ id: "email_legacy123" }) };
+  };
+
+  try {
+    const response = await handleSubmissionCreated(
+      legacyRequest({ form_name: "firstlogis-quote", id: "submission-legacy", created_at: "2026-07-20T03:00:00Z", data: baseData }),
+      { fetchImpl, waitImpl: async () => {} }
+    );
+    assert.equal(response.status, 204);
+    assert.equal(calls, 1);
+
+    const invalid = await handleSubmissionCreated(new Request("https://example.test", { method: "POST", body: "not-json" }));
+    const missing = await handleSubmissionCreated(new Request("https://example.test", { method: "POST", body: "{}" }));
+    assert.equal(invalid.status, 204);
+    assert.equal(missing.status, 204);
+    assert.equal(calls, 1);
+  } finally {
+    if (originalKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = originalKey;
+  }
+});
+
+test("only the legacy filename event is deployable", async () => {
+  const legacySource = await readFile(new URL("../netlify/functions/submission-created.mjs", import.meta.url), "utf8");
+  assert.match(legacySource, /export default async function submissionCreated/);
+  assert.doesNotMatch(legacySource, /formSubmitted/);
+  await assert.rejects(readFile(new URL("../netlify/functions/send-quote-email.mjs", import.meta.url), "utf8"));
 });
