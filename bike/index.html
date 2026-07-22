@@ -638,6 +638,36 @@ section{padding:62px 0}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.track{transition:none}}
 
+.business-footer{background:#07182f;color:#fff}
+.business-footer-main{display:grid;grid-template-columns:1fr 1.55fr .8fr;gap:48px;padding:56px 0}
+.business-footer-brand img{width:190px;max-width:100%}
+.business-footer-brand p{color:#bdc8d6}
+.business-footer-brand strong{display:block;font-size:33px;color:#57adff}
+.business-footer-brand span{font-weight:900}
+.business-footer h3{font-size:13px;letter-spacing:.1em}
+.business-footer-info dl{margin:0}
+.business-footer-info dl div{display:grid;grid-template-columns:110px 1fr;align-items:start;margin:8px 0}
+.business-footer-info dt{font-weight:900}
+.business-footer-info dd{margin:0;color:#bdc8d6;word-break:keep-all}
+.business-footer-info a{color:#57adff;font-weight:900}
+.business-footer-links{display:flex;flex-direction:column;gap:9px}
+.business-footer-links a{color:#bdc8d6}
+.business-footer-bottom{border-top:1px solid rgba(255,255,255,.12);padding:18px 0}
+.business-footer-bottom .wrap{display:flex;justify-content:space-between;color:#94a3b8;font-size:12px}
+
+@media(max-width:960px){
+  .business-footer-main{grid-template-columns:1fr 1fr}
+  .business-footer-links{grid-column:1/-1}
+  .business-footer-bottom{padding-bottom:82px}
+}
+
+@media(max-width:680px){
+  .business-footer-main{grid-template-columns:1fr;gap:32px;padding:42px 0}
+  .business-footer-links{grid-column:auto}
+  .business-footer-info dl div{grid-template-columns:95px 1fr}
+  .business-footer-bottom .wrap{flex-direction:column}
+}
+
 .actual-review-card{
   height:360px;
 }
@@ -929,6 +959,44 @@ section{padding:62px 0}
   </div>
 </section>
 </main>
+
+<footer class="business-footer">
+  <div class="wrap business-footer-main">
+    <div class="business-footer-brand">
+      <img src="../assets/logo-white.svg" alt="퍼스트물류">
+      <p>믿음으로 연결하는 전국 운송 파트너</p>
+      <strong>1661-8210</strong>
+      <span>8210 = 빨리일번</span>
+    </div>
+
+    <div class="business-footer-info">
+      <h3>COMPANY INFO</h3>
+      <dl>
+        <div><dt>상호</dt><dd>퍼스트물류</dd></div>
+        <div><dt>대표</dt><dd>변성민</dd></div>
+        <div><dt>개인정보책임자</dt><dd>변성민</dd></div>
+        <div><dt>주소</dt><dd>인천 제물포구 방축로37번길 30<br>인천산업용품유통단지 5동 331호</dd></div>
+        <div><dt>전화번호</dt><dd><a href="tel:16618210" data-track-event="phone_click" data-track-location="bike-footer">1661-8210</a></dd></div>
+        <div><dt>사업자등록번호</dt><dd>108-30-29235</dd></div>
+        <div><dt>운송허가증</dt><dd>제 남동-2-11828호</dd></div>
+      </dl>
+    </div>
+
+    <div class="business-footer-links">
+      <h3>QUICK LINKS</h3>
+      <a href="../docs/legal.html#terms">이용약관</a>
+      <a href="../docs/legal.html#privacy">개인정보처리방침</a>
+      <a href="../docs/legal.html#transport">운송약관</a>
+    </div>
+  </div>
+
+  <div class="business-footer-bottom">
+    <div class="wrap">
+      <p>© 2026 퍼스트물류. All Rights Reserved.</p>
+      <p>FIRST LOGISTICS OFFICIAL WEBSITE · V1.4.2</p>
+    </div>
+  </div>
+</footer>
 
 <nav class="mobile-call"><a href="tel:16618210" data-track-event="phone_click" data-track-location="bike-approved"><span>빠른 견적·배차 상담</span><strong>1661-8210</strong></a></nav>
 
