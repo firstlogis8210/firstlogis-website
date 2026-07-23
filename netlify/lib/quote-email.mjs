@@ -66,15 +66,16 @@ export async function resolveIdentifiers(event, data, now = new Date()) {
   };
 }
 
-function collectUrlCandidates(value) {
-  if (Array.isArray(value)) return value.flatMap(collectUrlCandidates);
+function collectUrlCandidates(value, inheritedMime = "", depth = 0) {
+  if (depth > 5) return [];
+  if (Array.isArray(value)) {
+    return value.flatMap(item => collectUrlCandidates(item, inheritedMime, depth + 1));
+  }
   if (value && typeof value === "object") {
-    return [value.url, value.secure_url, value.href]
-      .filter(item => typeof item === "string")
-      .map(url => ({
-        url,
-        mime: String(value.content_type ?? value.contentType ?? value.mime_type ?? value.mimeType ?? value.type ?? "")
-      }));
+    const mime = String(
+      value.content_type ?? value.contentType ?? value.mime_type ?? value.mimeType ?? value.type ?? inheritedMime
+    );
+    return Object.values(value).flatMap(item => collectUrlCandidates(item, mime, depth + 1));
   }
   if (typeof value !== "string") return [];
   const trimmed = value.trim();
@@ -82,13 +83,15 @@ function collectUrlCandidates(value) {
 
   try {
     const parsed = JSON.parse(trimmed);
-    if (typeof parsed === "string") return [{ url: parsed, mime: "" }];
-    if (Array.isArray(parsed) || (parsed && typeof parsed === "object")) return collectUrlCandidates(parsed);
+    if (typeof parsed === "string") return [{ url: parsed, mime: inheritedMime }];
+    if (Array.isArray(parsed) || (parsed && typeof parsed === "object")) {
+      return collectUrlCandidates(parsed, inheritedMime, depth + 1);
+    }
   } catch {
     // Netlify normally supplies the uploaded-file URL as a plain string.
   }
 
-  return trimmed.split(/[\s,]+/).filter(Boolean).map(url => ({ url, mime: "" }));
+  return trimmed.split(/[\s,]+/).filter(Boolean).map(url => ({ url, mime: inheritedMime }));
 }
 
 function normalizePhotoUrl(candidate) {
@@ -97,7 +100,9 @@ function normalizePhotoUrl(candidate) {
     if (url.protocol !== "https:" || url.href.length > 2048) return null;
     const pathname = decodeURIComponent(url.pathname);
     const hasImageMime = /^image\/[a-z0-9.+-]+$/i.test(candidate.mime);
-    if (!hasImageMime && !IMAGE_EXTENSIONS.test(pathname)) return null;
+    const hasNonImageMime = candidate.mime && !hasImageMime;
+    const hasFileExtension = /\/[^/]+\.[a-z0-9]{1,10}$/i.test(pathname);
+    if (hasNonImageMime || (hasFileExtension && !IMAGE_EXTENSIONS.test(pathname))) return null;
     return url.href;
   } catch {
     return null;
@@ -108,10 +113,13 @@ export function normalizePhotoLinks(data) {
   const links = [];
   for (const field of PHOTO_FIELDS) {
     const candidates = collectUrlCandidates(data?.[field]);
-    const url = candidates.map(normalizePhotoUrl).find(Boolean);
-    if (url && !links.includes(url)) links.push(url);
+    for (const candidate of candidates) {
+      const url = normalizePhotoUrl(candidate);
+      if (url && !links.includes(url)) links.push(url);
+      if (links.length === 3) return links;
+    }
   }
-  return links.slice(0, 3);
+  return links;
 }
 
 function rejectedPhotoFields(data) {
@@ -190,6 +198,12 @@ export function buildEmail(data, quoteId, receivedAt = new Date()) {
   const textPhotos = photos.length
     ? photos.map((url, index) => `사진 ${index + 1} 보기: ${url}`).join("\n")
     : "첨부 사진 없음";
+  const htmlDashboardNote = photos.length
+    ? '<p style="margin-top:24px;color:#475467">원본 제출 내용은 Netlify Forms 대시보드에서도 확인할 수 있습니다.</p>'
+    : "";
+  const textDashboardNote = photos.length
+    ? "\n\n원본 제출 내용은 Netlify Forms 대시보드에서도 확인할 수 있습니다."
+    : "";
 
   return {
     subject: `[퍼스트물류] 신규견적 #${quoteId}`,
@@ -197,7 +211,7 @@ export function buildEmail(data, quoteId, receivedAt = new Date()) {
       <h1 style="font-size:22px">퍼스트물류 신규 견적문의</h1>
       <table style="border-collapse:collapse;width:100%;max-width:760px"><tbody>${htmlRows}</tbody></table>
       <h2 style="font-size:18px;margin-top:24px">첨부 사진</h2><ul>${htmlPhotos}</ul>
-      <p style="margin-top:24px;color:#475467">원본 접수 내용과 업로드 파일은 Netlify Forms 대시보드에서 확인할 수 있습니다.</p>
+      ${htmlDashboardNote}
     </body></html>`,
     text: [
       "퍼스트물류 신규 견적문의",
@@ -205,8 +219,7 @@ export function buildEmail(data, quoteId, receivedAt = new Date()) {
       ...rows.map(([label, value]) => `${label}: ${value}`),
       "",
       textPhotos,
-      "",
-      "원본 접수 내용과 업로드 파일은 Netlify Forms 대시보드에서 확인할 수 있습니다."
+      textDashboardNote
     ].join("\n"),
     photoCount: photos.length
   };

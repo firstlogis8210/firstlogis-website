@@ -102,7 +102,7 @@ test("email shows the no-photo message when no files were uploaded", () => {
 });
 
 test("email shows one uploaded photo as a link and preview", () => {
-  const url = "https://d111111abcdef8.cloudfront.net/submissions/photo-1.jpg";
+  const url = "https://d111111abcdef8.cloudfront.net/submissions/opaque-file-id";
   const email = buildEmail({ ...baseData, "cargo-photo-1": url }, baseData.quote_id);
   assert.equal(email.photoCount, 1);
   assert.match(email.html, /사진 1 보기/);
@@ -111,15 +111,30 @@ test("email shows one uploaded photo as a link and preview", () => {
   assert.doesNotMatch(email.html, /사진 2 보기/);
 });
 
-test("email supports all three project photo fields and Netlify file value shapes", () => {
+test("photo URL strings and URL string arrays are both supported", () => {
+  const links = normalizePhotoLinks({
+    "cargo-photo-1": [
+      "https://files.example.com/opaque-one",
+      "https://files.example.com/opaque-two"
+    ],
+    "cargo-photo-2": "https://files.example.com/photo-3.jpg"
+  });
+  assert.deepEqual(links, [
+    "https://files.example.com/opaque-one",
+    "https://files.example.com/opaque-two",
+    "https://files.example.com/photo-3.jpg"
+  ]);
+});
+
+test("email supports objects and object arrays with nested Netlify file values", () => {
   const three = {
     ...baseData,
-    "cargo-photo-1": "https://files.example.com/photo-1.jpg",
-    "cargo-photo-2": { url: "https://files.example.com/photo-2", type: "image/png" },
-    "cargo-photo-3": [{ secure_url: "https://files.example.com/photo-3.webp", contentType: "image/webp" }]
+    "cargo-photo-1": { value: { url: "https://files.example.com/photo-1" }, type: "image/jpeg" },
+    "cargo-photo-2": [{ file: { secure_url: "https://files.example.com/photo-2" }, contentType: "image/png" }],
+    "cargo-photo-3": [{ href: "https://files.example.com/photo-3.webp", mimeType: "image/webp" }]
   };
   assert.deepEqual(normalizePhotoLinks(three), [
-    "https://files.example.com/photo-1.jpg",
+    "https://files.example.com/photo-1",
     "https://files.example.com/photo-2",
     "https://files.example.com/photo-3.webp"
   ]);
@@ -146,6 +161,16 @@ test("non-image and unsafe photo URLs are rejected", () => {
     "cargo-photo-3": JSON.stringify({ url: "https://files.example.com/file", content_type: "application/pdf" })
   };
   assert.deepEqual(normalizePhotoLinks(data), []);
+});
+
+test("the no-photo message is omitted whenever any valid URL exists", () => {
+  const email = buildEmail({
+    ...baseData,
+    "cargo-photo-1": { nested: ["https://d111111abcdef8.cloudfront.net/form-files/opaque-id"] }
+  }, baseData.quote_id);
+  assert.equal(email.photoCount, 1);
+  assert.match(email.html, /사진 1 보기/);
+  assert.doesNotMatch(email.html, /첨부 사진 없음/);
 });
 
 test("fallback quote and idempotency identifiers are deterministic", async () => {

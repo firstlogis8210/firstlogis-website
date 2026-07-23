@@ -11,11 +11,14 @@ Version : 1.0
 
 ## NETLIFY
 
+- [FIX] 확장자 없는 Netlify/CloudFront 사진 URL을 유효한 링크로 처리하고 URL 문자열·문자열 배열·중첩 객체·객체 배열에서 최대 3개 링크를 추출
+- [UPDATE] 사진 URL이 있을 때만 Netlify 대시보드 안내를 링크 아래 보조 문구로 표시
 - [UPDATE] 견적 이메일의 `cargo-photo-1`~`cargo-photo-3` 업로드 URL을 클릭 링크와 작은 미리보기로 표시하고 사진이 없으면 `첨부 사진 없음`으로 안내
 - [KEEP] Resend 첨부파일 전송 없이 Netlify/CloudFront HTTPS URL을 사용하며 기존 고객정보·운송정보·메일 발송 로직 유지
 
 ## TEST
 
+- [ADD] 확장자 없는 CloudFront URL, URL 문자열 배열, 중첩 객체·객체 배열 및 사진 존재 시 빈 첨부 문구 미표시 검사
 - [ADD] 사진 0개·1개·3개, Netlify 파일 값 구조 및 HTML URL 이스케이프 검사
 
 ---
