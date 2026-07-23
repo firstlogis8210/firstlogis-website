@@ -9,6 +9,18 @@ Version : 1.0
 
 # 2026-07-23
 
+## WEBSITE
+
+- [UPDATE] 메인 홈페이지와 `/bike`의 Netlify Forms 견적 UI 및 메인 견적 모달을 제거하고 카카오 비즈채널 상담 CTA로 단순화
+- [ADD] 카카오톡 견적 버튼 주변에 바이크 사진과 출발지·도착지 전송 안내 문구 추가
+- [KEEP] 전화 CTA, 카카오 비즈채널 URL, GA4 전화·카카오 클릭 추적 및 SEO 코드 유지
+
+## TEST
+
+- [DONE] 양 페이지의 폼·submit·모달·`quote-form.js` 호출 제거와 전화·카카오 링크 및 클릭 이벤트 정적 검사
+
+---
+
 ## NETLIFY
 
 - [FIX] 확장자 없는 Netlify/CloudFront 사진 URL을 유효한 링크로 처리하고 URL 문자열·문자열 배열·중첩 객체·객체 배열에서 최대 3개 링크를 추출

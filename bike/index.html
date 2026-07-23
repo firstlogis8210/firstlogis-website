@@ -538,6 +538,7 @@ section{padding:62px 0}
 .bike-upload{margin:0 0 16px;padding:15px;border:1px dashed #9db1c8;border-radius:12px;background:#f8fbff}.bike-upload legend{padding:0 5px;font-size:14px;font-weight:900}.bike-upload input{border:0;padding:5px 0}.bike-upload small{display:block;color:var(--muted)}
 .bike-privacy{display:flex!important;align-items:center;gap:8px}.bike-privacy input{width:auto;margin:0}.bike-privacy a{text-decoration:underline;color:#1267d6}
 .bike-submit{width:100%;padding:15px;border:0;border-radius:12px;background:linear-gradient(135deg,#3599ff,#1062d6);color:#fff;font-weight:950;cursor:pointer}.bike-submit:disabled{cursor:wait;opacity:.7}
+.bike-kakao-guide{max-width:680px;margin:0 auto 24px;color:var(--muted);font-size:17px;line-height:1.7;text-align:center;word-break:keep-all}.bike-quote-actions{display:flex;justify-content:center;gap:12px}.bike-kakao-button,.bike-phone-button{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:14px 24px;border-radius:12px;font-weight:950}.bike-kakao-button{background:#fee500;color:#181600}.bike-phone-button{background:linear-gradient(135deg,#3599ff,#1062d6);color:#fff}
 .hidden-field{position:absolute;left:-9999px}.file-error{min-height:1.5em;color:#b42318!important}.file-error:empty{display:none}.form-status{margin:12px 0 0;font-size:14px;font-weight:850;white-space:pre-line}.form-status.is-success{color:#087443}.form-status.is-error{color:#b42318}
 .mobile-call{display:none}
 
@@ -630,10 +631,11 @@ section{padding:62px 0}
   .compare-divider{margin:auto;width:48px;height:48px}
 
   .bottom-cta{padding-bottom:96px}
-  .quote-section{padding:46px 0}.bike-quote{padding:25px 18px}.bike-quote-head h2{font-size:27px}.bike-form-row{grid-template-columns:1fr}
+  .quote-section{padding:46px 0}.bike-quote{padding:25px 18px}.bike-quote-head h2{font-size:27px}.bike-form-row{grid-template-columns:1fr}.bike-quote-actions{flex-direction:column}.bike-kakao-button,.bike-phone-button{width:100%}
   .bottom-box{display:block;padding:25px 22px} .bottom-number{font-size:36px;display:block;margin-top:13px}
-  .mobile-call{position:fixed;display:block;left:0;right:0;bottom:0;z-index:120;padding:8px;background:#fff;border-top:1px solid var(--line);box-shadow:0 -10px 28px rgba(15,23,42,.14)}
+  .mobile-call{position:fixed;display:grid;grid-template-columns:1fr 1fr;gap:8px;left:0;right:0;bottom:0;z-index:120;padding:8px;background:#fff;border-top:1px solid var(--line);box-shadow:0 -10px 28px rgba(15,23,42,.14)}
   .mobile-call a{display:flex;align-items:center;justify-content:center;gap:9px;min-height:60px;border-radius:15px;background:linear-gradient(135deg,#3599ff,#1062d6);color:#fff;font-weight:950}
+  .mobile-call .mobile-kakao{background:#fee500;color:#181600}
   .mobile-call strong{font-size:21px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.track{transition:none}}
@@ -922,33 +924,14 @@ section{padding:62px 0}
 
 <section class="quote-section" id="quote">
   <div class="wrap">
-    <form class="bike-quote" name="firstlogis-bike-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-bike-quote">
-      <div class="bike-quote-head"><h2>바이크탁송 견적문의</h2><p>운송 정보를 남겨주시면 확인 후 빠르게 연락드리겠습니다.</p></div>
-      <input type="hidden" name="form-name" value="firstlogis-bike-quote">
-      <input type="hidden" name="form_source" value="bike-inline">
-      <input type="hidden" name="quote_id" value="">
-      <p class="hidden-field" aria-hidden="true"><label>입력하지 마세요 <input type="text" name="bot-field" value="" autocomplete="off" tabindex="-1" aria-hidden="true"></label></p>
-      <div class="bike-form-row">
-        <label for="bike-name">성함<input id="bike-name" name="name" required autocomplete="name" maxlength="100"></label>
-        <label for="bike-phone">연락처<input id="bike-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="010-0000-0000"></label>
+    <div class="bike-quote">
+      <div class="bike-quote-head"><h2>카카오톡으로 바이크탁송 견적받기</h2><p>사진과 운송 정보를 보내주시면 확인 후 빠르게 안내해드립니다.</p></div>
+      <p class="bike-kakao-guide">바이크 사진과 출발지·도착지를 카카오톡으로 보내주시면 빠르게 견적을 안내해드립니다.</p>
+      <div class="bike-quote-actions">
+        <a class="bike-kakao-button" href="https://pf.kakao.com/_xdTxhfX" target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="bike-quote">카카오톡으로 견적받기</a>
+        <a class="bike-phone-button" href="tel:16618210" data-track-event="phone_click" data-track-location="bike-quote">1661-8210 전화하기</a>
       </div>
-      <div class="bike-form-row">
-        <label for="bike-from">출발지<input id="bike-from" name="origin" required maxlength="200" placeholder="예: 서울 강남구 또는 상세 주소"></label>
-        <label for="bike-to">도착지<input id="bike-to" name="destination" required maxlength="200" placeholder="예: 인천 서구 또는 상세 주소"></label>
-      </div>
-      <label for="bike-item">운송품목<input id="bike-item" name="item" required maxlength="200" placeholder="예: 바이크 기종 및 배기량"></label>
-      <fieldset class="bike-upload">
-        <legend>사진 첨부 (선택)</legend>
-        <label for="bike-photos">사진 선택</label><input id="bike-photos" name="cargo-photos" type="file" accept="image/*" multiple>
-        <small>바이크와 운송 상태를 확인할 수 있는 사진은 한 번에 최대 3장까지 선택할 수 있습니다.</small>
-        <small class="file-error" aria-live="polite"></small>
-        <span class="hidden-field" aria-hidden="true"><input type="file" name="cargo-photo-1"><input type="file" name="cargo-photo-2"><input type="file" name="cargo-photo-3"></span>
-      </fieldset>
-      <label for="bike-message">요청사항 (선택)<textarea id="bike-message" name="message" rows="4" maxlength="2000" placeholder="희망 일정과 요청사항을 남겨주세요."></textarea></label>
-      <label class="bike-privacy" for="bike-privacy"><input id="bike-privacy" type="checkbox" name="privacy-agree" required><span><a href="../docs/legal.html#privacy" target="_blank" rel="noopener">개인정보 수집 및 이용</a>에 동의합니다.</span></label>
-      <button class="bike-submit" type="submit">견적 문의 보내기</button>
-      <p class="form-status" role="status" aria-live="polite"></p>
-    </form>
+    </div>
   </div>
 </section>
 
@@ -998,7 +981,10 @@ section{padding:62px 0}
   </div>
 </footer>
 
-<nav class="mobile-call"><a href="tel:16618210" data-track-event="phone_click" data-track-location="bike-approved"><span>빠른 견적·배차 상담</span><strong>1661-8210</strong></a></nav>
+<nav class="mobile-call">
+  <a href="tel:16618210" data-track-event="phone_click" data-track-location="bike-approved"><span>전화 상담</span><strong>1661-8210</strong></a>
+  <a class="mobile-kakao" href="https://pf.kakao.com/_xdTxhfX" target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="bike-mobile"><span>카카오톡</span><strong>견적받기</strong></a>
+</nav>
 
 <script>
 const track=document.getElementById("track");
@@ -1038,7 +1024,6 @@ viewport.addEventListener("touchend",event=>{
 },{passive:true});
 buildDots();requestAnimationFrame(move);restart();
 </script>
-<script src="../js/quote-form.js"></script>
 <script src="../js/analytics.js"></script>
 <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
 <script>

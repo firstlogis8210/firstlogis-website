@@ -30,26 +30,4 @@
     btn.addEventListener("click", () => showToast(`${btn.dataset.pending}은 현재 준비 중입니다.`));
   });
 
-  const modal = document.getElementById("quoteModal");
-  let modalOpener = null;
-  function openModal(event) {
-    modalOpener = event?.currentTarget || document.activeElement;
-    modal?.classList.add("open");
-    modal?.setAttribute("aria-hidden", "false");
-    document.body.classList.add("modal-open");
-    modal?.querySelector('input[name="name"]')?.focus();
-  }
-  function closeModal() {
-    const wasOpen = modal?.classList.contains("open");
-    modal?.classList.remove("open");
-    modal?.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("modal-open");
-    if (wasOpen) modalOpener?.focus();
-  }
-  $all(".open-quote").forEach(btn => btn.addEventListener("click", openModal));
-  $all("[data-close-modal]").forEach(btn => btn.addEventListener("click", closeModal));
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeModal();
-  });
-
 })();

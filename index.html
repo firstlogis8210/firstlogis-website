@@ -64,7 +64,7 @@
         <a href="#process">운송과정</a>
         <a href="#cases">운송분야</a>
         <a href="#faq">FAQ</a>
-        <a href="#quote" data-track-event="quote_start" data-track-location="header-nav">견적문의</a>
+        <a data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="header-nav">카카오톡 상담</a>
         <button class="nav-disabled" data-pending="블로그">블로그</button>
         <button class="nav-disabled" data-pending="네이버 플레이스">네이버 플레이스</button>
       </nav>
@@ -75,7 +75,7 @@
         <small data-phone-mnemonic>8210 = 빨리일번</small>
       </div>
 
-      <button class="btn btn-primary open-quote" type="button" data-track-event="quote_start" data-track-location="header">견적 문의</button>
+      <a class="btn btn-primary" data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="header">카카오톡 상담</a>
     </div>
   </header>
 
@@ -95,10 +95,10 @@
             <strong data-company-phone>1661-8210</strong>
             <small data-phone-mnemonic>8210 = 빨리일번</small>
           </a>
-          <button class="quote-card open-quote" type="button" data-track-event="quote_start" data-track-location="hero">
-            <span>견적 문의</span>
-            <strong>사진 첨부 가능</strong>
-          </button>
+          <a class="quote-card" data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="hero">
+            <span>카카오톡으로 견적받기</span>
+            <strong>사진 전송 가능</strong>
+          </a>
         </div>
       </div>
     </section>
@@ -110,9 +110,6 @@
       <a class="float-kakao" data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="desktop-fixed">
         <b>💬</b><span>카카오톡</span><small>상담하기</small>
       </a>
-      <button type="button" class="float-quote open-quote" data-track-event="quote_start" data-track-location="desktop-fixed">
-        <b>▣</b><span>견적 문의</span><small>사진 첨부</small>
-      </button>
       <a href="#top" class="float-top"><b>↑</b><span>TOP</span></a>
     </aside>
 
@@ -217,51 +214,16 @@
     </section>
 
     <section class="section quote-section" id="quote">
-      <div class="container quote-layout">
+      <div class="container quote-layout kakao-quote-layout">
         <div class="quote-copy">
-          <span>빠른 견적 문의</span>
-          <h2>출·도착지, 운송품목, 사진 등을<br>접수해주시면 빠르게 상담해드리겠습니다.</h2>
-          <p>운송일정과 현장 조건을 함께 남겨주시면 더욱 정확하게 안내해드릴 수 있습니다.</p>
-          <a class="btn btn-primary" data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="quote-section">1661-8210 전화하기</a>
+          <span>카카오톡 빠른 견적</span>
+          <h2>사진과 운송 정보를 보내주시면<br>빠르게 견적을 안내해드립니다.</h2>
+          <p class="kakao-guide">바이크 사진과 출발지·도착지를 카카오톡으로 보내주시면 빠르게 견적을 안내해드립니다.</p>
+          <div class="quote-cta-buttons">
+            <a class="btn btn-primary" data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="quote-section">카카오톡으로 견적받기</a>
+            <a class="btn btn-dark" data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="quote-section">1661-8210 전화하기</a>
+          </div>
         </div>
-
-        <form class="quote-form" name="firstlogis-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-quote">
-          <input type="hidden" name="form-name" value="firstlogis-quote">
-          <input type="hidden" name="form_source" value="main-inline">
-          <input type="hidden" name="quote_id" value="">
-          <p class="hidden-field" aria-hidden="true"><label>입력하지 마세요 <input type="text" name="bot-field" value="" autocomplete="off" tabindex="-1" aria-hidden="true"></label></p>
-
-          <div class="form-row">
-            <label for="quote-name">성함 (또는 업체명)<input id="quote-name" name="name" required autocomplete="name" maxlength="100"></label>
-            <label for="quote-phone">연락처<input id="quote-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="010-0000-0000"></label>
-          </div>
-          <div class="form-row">
-            <label for="quote-from">출발지<input id="quote-from" name="origin" required maxlength="200" placeholder="예: 서울 강남구 또는 상세 주소"></label>
-            <label for="quote-to">도착지<input id="quote-to" name="destination" required maxlength="200" placeholder="예: 인천 서구 또는 상세 주소"></label>
-          </div>
-          <div class="form-row">
-            <label for="quote-date">운송일 (선택)<input id="quote-date" name="date" type="date"></label>
-            <label for="quote-item">운송 품목<input id="quote-item" name="item" required maxlength="200" placeholder="예: 바이크, 의료장비, 박스 3개"></label>
-          </div>
-
-          <label for="quote-message">추가 요청사항 (선택)<textarea id="quote-message" name="message" rows="4" maxlength="2000" placeholder="예: 차량 크기, 엘리베이터 여부, 희망시간 등"></textarea></label>
-
-          <fieldset class="upload-box">
-            <legend>화물 사진 첨부 (선택)</legend>
-            <label for="quote-photos">사진 선택</label><input id="quote-photos" name="cargo-photos" type="file" accept="image/*" multiple>
-            <small>운송품목 사진은 한 번에 최대 3장까지 선택할 수 있습니다.</small>
-            <small class="file-error" aria-live="polite"></small>
-            <span class="hidden-field" aria-hidden="true"><input type="file" name="cargo-photo-1"><input type="file" name="cargo-photo-2"><input type="file" name="cargo-photo-3"></span>
-          </fieldset>
-
-          <label class="agree" for="quote-privacy">
-            <input id="quote-privacy" type="checkbox" name="privacy-agree" required>
-            <span><a href="docs/legal.html#privacy" target="_blank" rel="noopener">개인정보 수집 및 이용</a>에 동의합니다.</span>
-          </label>
-
-          <button class="btn btn-dark btn-block" type="submit">견적 문의 보내기</button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-        </form>
       </div>
     </section>
   </main>
@@ -309,51 +271,13 @@
 
   <div class="mobile-actions">
     <a data-company-phone-link href="tel:16618210" data-track-event="phone_click" data-track-location="mobile-fixed"><b>☎ 전화</b><span data-company-phone>1661-8210</span></a>
-    <a data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="mobile-fixed"><b>💬 카카오톡</b><span>상담하기</span></a>
-    <button class="open-quote" data-track-event="quote_start" data-track-location="mobile-fixed"><b>▣ 견적</b><span>사진 첨부</span></button>
-  </div>
-
-  <div class="modal" id="quoteModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close-modal></div>
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle">
-      <button class="modal-close" type="button" data-close-modal aria-label="닫기">×</button>
-      <h2 id="quoteModalTitle">빠른 견적 문의</h2>
-      <p>운송 조건과 사진을 보내주시면 확인 후 연락드립니다.</p>
-
-      <form name="firstlogis-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-honeypot="bot-field" enctype="multipart/form-data" data-track-form="firstlogis-quote">
-        <input type="hidden" name="form-name" value="firstlogis-quote">
-        <input type="hidden" name="form_source" value="main-popup">
-        <input type="hidden" name="quote_id" value="">
-        <p class="hidden-field" aria-hidden="true"><label>입력하지 마세요 <input type="text" name="bot-field" value="" autocomplete="off" tabindex="-1" aria-hidden="true"></label></p>
-        <div class="form-row">
-          <label for="popup-name">성함 (또는 업체명)<input id="popup-name" name="name" required autocomplete="name" maxlength="100"></label>
-          <label for="popup-phone">연락처<input id="popup-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="010-0000-0000"></label>
-        </div>
-        <div class="form-row">
-          <label for="popup-from">출발지<input id="popup-from" name="origin" required maxlength="200" placeholder="예: 서울 강남구 또는 상세 주소"></label>
-          <label for="popup-to">도착지<input id="popup-to" name="destination" required maxlength="200" placeholder="예: 인천 서구 또는 상세 주소"></label>
-        </div>
-        <label for="popup-item">운송 품목<input id="popup-item" name="item" required maxlength="200" placeholder="예: 바이크, 의료장비, 박스 3개"></label>
-        <label for="popup-message">요청사항 (선택)<textarea id="popup-message" name="message" rows="3" maxlength="2000" placeholder="예: 차량 크기, 엘리베이터 여부, 희망시간 등"></textarea></label>
-        <fieldset class="upload-box">
-          <legend>화물 사진 첨부 (선택)</legend>
-          <label for="popup-photos">사진 선택</label><input id="popup-photos" name="cargo-photos" type="file" accept="image/*" multiple>
-          <small>운송품목 사진은 한 번에 최대 3장까지 선택할 수 있습니다.</small>
-          <small class="file-error" aria-live="polite"></small>
-          <span class="hidden-field" aria-hidden="true"><input type="file" name="cargo-photo-1"><input type="file" name="cargo-photo-2"><input type="file" name="cargo-photo-3"></span>
-        </fieldset>
-        <label class="agree" for="popup-privacy"><input id="popup-privacy" type="checkbox" name="privacy-agree" required><span><a href="docs/legal.html#privacy" target="_blank" rel="noopener">개인정보 수집 및 이용</a>에 동의합니다.</span></label>
-        <button class="btn btn-dark btn-block" type="submit">견적 문의 보내기</button>
-        <p class="form-status" role="status" aria-live="polite"></p>
-      </form>
-    </div>
+    <a data-kakao-link target="_blank" rel="noopener noreferrer" data-track-event="kakao_click" data-track-location="mobile-fixed"><b>💬 카카오톡</b><span>견적받기</span></a>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/config.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/quote-form.js"></script>
   <script src="js/analytics.js"></script>
   <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
   <script type="text/javascript">

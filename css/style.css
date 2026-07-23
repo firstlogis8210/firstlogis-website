@@ -19,6 +19,8 @@
 .floating-actions .float-kakao b{font-size:24px}
 .floating-actions .float-kakao span{font-size:12px;font-weight:900}
 .floating-actions .float-kakao small{font-size:10px;font-weight:800}
+.kakao-quote-layout{display:block;max-width:900px;text-align:center}.kakao-quote-layout .quote-copy{padding:56px 48px;border:1px solid #dfe6ef;border-radius:18px;background:#fff;box-shadow:0 14px 32px rgba(20,55,100,.08)}.kakao-quote-layout .quote-copy h2{max-width:none}.kakao-guide{font-size:17px;word-break:keep-all}.quote-cta-buttons{display:flex;justify-content:center;gap:12px;margin-top:26px}.mobile-actions{grid-template-columns:repeat(2,1fr)!important}.mobile-actions a:nth-child(2){background:#fee500;color:#111}
+@media(max-width:680px){.kakao-quote-layout .quote-copy{padding:38px 20px}.kakao-guide{font-size:15px}.quote-cta-buttons{flex-direction:column}.quote-cta-buttons .btn{width:100%}}
 
 
 /* V1.0.4 layout refinements */
