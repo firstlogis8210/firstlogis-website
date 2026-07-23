@@ -37,6 +37,10 @@ test("all three quote forms have one matching hardened honeypot", () => {
 
     assert.match(form, /<input\b[^>]*type="hidden"[^>]*name="form-name"[^>]*value="firstlogis-(?:bike-)?quote"/);
     assert.match(form, /<input\b[^>]*type="hidden"[^>]*name="form_source"[^>]*value="(?:main-inline|main-popup|bike-inline)"/);
+    assert.match(form, /<input\b[^>]*name="origin"/);
+    assert.match(form, /<input\b[^>]*name="destination"/);
+    assert.doesNotMatch(form, /<input\b[^>]*name="from"/);
+    assert.doesNotMatch(form, /<input\b[^>]*name="to"/);
     formSources.push(/name="form_source"[^>]*value="([^"]+)"/.exec(form)?.[1]);
   }
 

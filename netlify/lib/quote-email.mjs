@@ -157,8 +157,8 @@ export function buildEmail(data, quoteId, receivedAt = new Date()) {
     source,
     name: cleanText(data.name),
     phone: cleanText(data.phone),
-    from: cleanText(data.from),
-    to: cleanText(data.to),
+    origin: cleanText(data.origin),
+    destination: cleanText(data.destination),
     item: cleanText(data.item),
     message: cleanText(data.message, "요청사항 없음")
   };
@@ -168,8 +168,8 @@ export function buildEmail(data, quoteId, receivedAt = new Date()) {
     ["폼 구분", values.source],
     ["고객명", values.name],
     ["연락처", values.phone],
-    ["출발지", values.from],
-    ["도착지", values.to],
+    ["출발지", values.origin],
+    ["도착지", values.destination],
     ["운송 품목 또는 차량정보", values.item],
     ["요청사항", values.message]
   ];

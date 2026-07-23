@@ -24,6 +24,17 @@ Version : 1.0
 
 ## BUG
 
+- [FIX] Netlify 이메일 알림과 충돌할 수 있는 출발지·도착지 키 `from`, `to`를 메인 본문·팝업·바이크 폼과 메일 처리 경로에서 `origin`, `destination`으로 변경
+
+## TEST
+
+- [DONE] 세 견적 폼의 `origin`, `destination` 필드와 기존 `from`, `to` 제거 및 이메일 본문 출발지·도착지 표시 정적 검사 추가
+- [KEEP] Resend 발신·수신 옵션의 `from`, `to`, honeypot, AJAX 제출, Netlify Forms 및 분석 코드 무변경
+
+---
+
+## BUG
+
 - [FIX] 메인 본문·팝업·바이크 폼 honeypot에 명시적 text 타입, 빈 값, 자동완성 차단, 포커스 제외 및 스크린리더 제외 속성 적용
 - [FIX] Netlify post-processing 이후에도 honeypot 이름을 식별하도록 `data-honeypot`을 유지하고 AJAX 제출 직전 기존 값을 제거한 뒤 빈 값 하나로 정규화
 - [KEEP] 공식 문서상 Spam 목록 저장은 honeypot 거부가 아닌 Akismet 분류이므로 체류시간 필드와 reCAPTCHA는 추가하지 않음

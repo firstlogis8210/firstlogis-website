@@ -18,8 +18,8 @@ const baseData = {
   quote_id: "FL-20260720-120000-ABCD",
   name: "홍길동",
   phone: "010-1234-5678",
-  from: "서울",
-  to: "인천",
+  origin: "서울",
+  destination: "인천",
   item: "바이크",
   message: "안전 운송 요청"
 };
@@ -62,7 +62,7 @@ test("unknown source is ignored and diagnostic logs exclude personal values", as
     form_source: "unknown-source",
     name: personalValues[0],
     phone: personalValues[1],
-    from: personalValues[2],
+    origin: personalValues[2],
     message: personalValues[3],
     "cargo-photo-1": personalValues[4]
   };
@@ -237,7 +237,7 @@ test("successful delivery logs contain no personal values", async () => {
       waitImpl: async () => {}
     }));
     const serialized = JSON.stringify(entries);
-    for (const value of [baseData.name, baseData.phone, baseData.from, baseData.to, baseData.item, baseData.message]) {
+    for (const value of [baseData.name, baseData.phone, baseData.origin, baseData.destination, baseData.item, baseData.message]) {
       assert.doesNotMatch(serialized, new RegExp(value));
     }
     assert.match(serialized, /email_safe123/);
