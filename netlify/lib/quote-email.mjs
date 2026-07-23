@@ -73,7 +73,7 @@ function collectUrlCandidates(value) {
       .filter(item => typeof item === "string")
       .map(url => ({
         url,
-        mime: String(value.content_type ?? value.contentType ?? value.mime_type ?? value.mimeType ?? "")
+        mime: String(value.content_type ?? value.contentType ?? value.mime_type ?? value.mimeType ?? value.type ?? "")
       }));
   }
   if (typeof value !== "string") return [];
@@ -179,10 +179,16 @@ export function buildEmail(data, quoteId, receivedAt = new Date()) {
       <td style="padding:10px;border:1px solid #d0d5dd;white-space:pre-wrap">${escapeHtml(value)}</td>
     </tr>`).join("");
   const htmlPhotos = photos.length
-    ? photos.map((url, index) => `<li><a href="${escapeHtml(url)}" rel="noopener noreferrer">사진 ${index + 1} 확인</a></li>`).join("")
+    ? photos.map((url, index) => {
+      const safeUrl = escapeHtml(url);
+      return `<li style="margin-bottom:16px">
+        <a href="${safeUrl}" rel="noopener noreferrer">사진 ${index + 1} 보기</a>
+        <div style="margin-top:8px"><a href="${safeUrl}" rel="noopener noreferrer"><img src="${safeUrl}" alt="첨부 사진 ${index + 1} 미리보기" width="160" style="display:block;max-width:160px;height:auto;border:1px solid #d0d5dd;border-radius:6px"></a></div>
+      </li>`;
+    }).join("")
     : "<li>첨부 사진 없음</li>";
   const textPhotos = photos.length
-    ? photos.map((url, index) => `사진 ${index + 1}: ${url}`).join("\n")
+    ? photos.map((url, index) => `사진 ${index + 1} 보기: ${url}`).join("\n")
     : "첨부 사진 없음";
 
   return {
@@ -190,7 +196,7 @@ export function buildEmail(data, quoteId, receivedAt = new Date()) {
     html: `<!doctype html><html lang="ko"><body style="font-family:Arial,'Apple SD Gothic Neo',sans-serif;color:#101828">
       <h1 style="font-size:22px">퍼스트물류 신규 견적문의</h1>
       <table style="border-collapse:collapse;width:100%;max-width:760px"><tbody>${htmlRows}</tbody></table>
-      <h2 style="font-size:18px;margin-top:24px">사진</h2><ul>${htmlPhotos}</ul>
+      <h2 style="font-size:18px;margin-top:24px">첨부 사진</h2><ul>${htmlPhotos}</ul>
       <p style="margin-top:24px;color:#475467">원본 접수 내용과 업로드 파일은 Netlify Forms 대시보드에서 확인할 수 있습니다.</p>
     </body></html>`,
     text: [

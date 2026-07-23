@@ -92,16 +92,30 @@ test("HTML escape handles user-controlled markup", () => {
   assert.match(email.html, /&lt;img src=x onerror=alert\(1\)&gt;/);
 });
 
-test("photo payload supports zero, one, and three links", () => {
+test("email shows the no-photo message when no files were uploaded", () => {
   assert.deepEqual(normalizePhotoLinks(baseData), []);
-  assert.equal(buildEmail(baseData, baseData.quote_id).photoCount, 0);
+  const email = buildEmail(baseData, baseData.quote_id);
+  assert.equal(email.photoCount, 0);
+  assert.match(email.html, /<h2[^>]*>첨부 사진<\/h2>/);
+  assert.match(email.html, /첨부 사진 없음/);
+  assert.doesNotMatch(email.html, /<img\b/);
+});
 
-  const one = { ...baseData, "cargo-photo-1": "https://files.example.com/photo-1.jpg" };
-  assert.equal(buildEmail(one, baseData.quote_id).photoCount, 1);
+test("email shows one uploaded photo as a link and preview", () => {
+  const url = "https://d111111abcdef8.cloudfront.net/submissions/photo-1.jpg";
+  const email = buildEmail({ ...baseData, "cargo-photo-1": url }, baseData.quote_id);
+  assert.equal(email.photoCount, 1);
+  assert.match(email.html, /사진 1 보기/);
+  assert.match(email.html, new RegExp(`href="${url}"`));
+  assert.match(email.html, new RegExp(`src="${url}"`));
+  assert.doesNotMatch(email.html, /사진 2 보기/);
+});
 
+test("email supports all three project photo fields and Netlify file value shapes", () => {
   const three = {
-    ...one,
-    "cargo-photo-2": { url: "https://files.example.com/photo-2", content_type: "image/png" },
+    ...baseData,
+    "cargo-photo-1": "https://files.example.com/photo-1.jpg",
+    "cargo-photo-2": { url: "https://files.example.com/photo-2", type: "image/png" },
     "cargo-photo-3": [{ secure_url: "https://files.example.com/photo-3.webp", contentType: "image/webp" }]
   };
   assert.deepEqual(normalizePhotoLinks(three), [
@@ -109,6 +123,20 @@ test("photo payload supports zero, one, and three links", () => {
     "https://files.example.com/photo-2",
     "https://files.example.com/photo-3.webp"
   ]);
+  const email = buildEmail(three, baseData.quote_id);
+  assert.equal(email.photoCount, 3);
+  for (const index of [1, 2, 3]) assert.match(email.html, new RegExp(`사진 ${index} 보기`));
+});
+
+test("photo URLs are safely escaped in HTML links and previews", () => {
+  const data = {
+    ...baseData,
+    "cargo-photo-1": "https://files.example.com/photo.jpg?token=one&view=two"
+  };
+  const email = buildEmail(data, baseData.quote_id);
+  assert.match(email.html, /href="https:\/\/files\.example\.com\/photo\.jpg\?token=one&amp;view=two"/);
+  assert.match(email.html, /src="https:\/\/files\.example\.com\/photo\.jpg\?token=one&amp;view=two"/);
+  assert.doesNotMatch(email.html, /token=one&view=two/);
 });
 
 test("non-image and unsafe photo URLs are rejected", () => {

@@ -7,6 +7,19 @@
 Last Update : 2026-07-22
 Version : 1.0
 
+# 2026-07-23
+
+## NETLIFY
+
+- [UPDATE] 견적 이메일의 `cargo-photo-1`~`cargo-photo-3` 업로드 URL을 클릭 링크와 작은 미리보기로 표시하고 사진이 없으면 `첨부 사진 없음`으로 안내
+- [KEEP] Resend 첨부파일 전송 없이 Netlify/CloudFront HTTPS URL을 사용하며 기존 고객정보·운송정보·메일 발송 로직 유지
+
+## TEST
+
+- [ADD] 사진 0개·1개·3개, Netlify 파일 값 구조 및 HTML URL 이스케이프 검사
+
+---
+
 # 2026-07-22
 
 ## WEBSITE
